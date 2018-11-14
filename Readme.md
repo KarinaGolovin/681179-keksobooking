@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Karina Golovin](https://up.htmlacademy.ru/javascript/16/user/681179).
-* Наставник: `Неизвестно`.
+* Наставник: `Дмитрий Долженко`.
 
 ---
 
