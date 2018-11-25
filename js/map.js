@@ -163,6 +163,7 @@
     return clone;
   };
 
+  // On cklick
   var addEventListeners = function () {
     var pins = document.querySelectorAll('.map__pin');
     var currentActivePopup = null;
@@ -192,7 +193,7 @@
 
     var handlePopupCloseClick = function (event) {
       event.currentTarget.closest('.popup').classList.add('hidden');
-      // снять класс c pin
+      // remove pin class
       var activePin = document.querySelector('.map__pin--active');
       activePin.classList.remove('map__pin--active');
       currentActivePopup = null;
@@ -201,11 +202,11 @@
     pins.forEach(function (element) {
       element.addEventListener('click', function (event) {
         currentActivePopup = handleMapPinClick(event);
-        // проверяет, маин пин или нет
+        // cjeck is it main pin
         if (element.classList.contains('map__pin--main')) {
           return;
         } else {
-          // снять класс c активного pin
+          // remove active pin class/check if it active
           var activePin = document.querySelector('.map__pin--active');
           if (activePin && element !== activePin) {
             activePin.classList.remove('map__pin--active');
@@ -215,6 +216,7 @@
       });
     });
 
+    // Listen close [X] button event
     document.querySelectorAll('.popup__close').forEach(function (element) {
       currentActivePopup = null;
       element.addEventListener('click', handlePopupCloseClick);
