@@ -1,16 +1,6 @@
 'use strict';
 
 (function () {
-  var mapBlock = document.querySelector('.map');
-  // place to put generated ad templates via  DocumentFragment
-  var mapPinsBlock = mapBlock.querySelector('.map__pins');
-  // place to put generated pin template
-  var mapPinTemplate = document.querySelector('#pin');
-  // ad card template
-  var cardTemplate = document.querySelector('#card');
-  // make it visible
-  mapBlock.classList.remove('map--faded');
-
   var PIN_SIZE_X = 50;
   var PIN_SIZE_Y = 70;
   var NUMBER_OF_USERS = 8;
@@ -32,8 +22,24 @@
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
+  var OFFER_TYPES = {
+    'flat': 'Квартира',
+    'palace': 'Дворец',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
+  };
   var MAP_WIDTH = 1200;
   var MAP_HEIGHT = 630;
+
+  var mapBlock = document.querySelector('.map');
+  // place to put generated ad templates via  DocumentFragment
+  var mapPinsBlock = mapBlock.querySelector('.map__pins');
+  // place to put generated pin template
+  var mapPinTemplate = document.querySelector('#pin');
+  // ad card template
+  var cardTemplate = document.querySelector('#card');
+  // make it visible
+  mapBlock.classList.remove('map--faded');
 
   var getRandomNumber = window.usefulUtilities.getRandomNumber;
   var shuffleArray = window.usefulUtilities.shuffleArray;
@@ -136,13 +142,6 @@
     var templateType = clone.querySelector('.popup__type');
     var templatePhotosContainer = clone.querySelector('.popup__photos');
     var templateFeaturesContainer = clone.querySelector('.popup__features');
-
-    var offerTypes = {
-      'flat': 'Квартира',
-      'palace': 'Дворец',
-      'house': 'Дом',
-      'bungalo': 'Бунгало'
-    };
     var offer = user.offer;
 
     templateTitle.textContent = offer.title;
@@ -152,7 +151,7 @@
     templateTime.textContent = 'Заезд после ' + offer.checkin + ' выезд до ' + offer.checkout;
     templateDescription.textContent = offer.description;
 
-    templateType.textContent = offerTypes[offer.type];
+    templateType.textContent = OFFER_TYPES[offer.type];
     templateAvatar.src = user.author.avatar;
 
     renderFeatures(templateFeaturesContainer, offer.features);
@@ -202,10 +201,8 @@
     pins.forEach(function (element) {
       element.addEventListener('click', function (event) {
         currentActivePopup = handleMapPinClick(event);
-        // cjeck is it main pin
-        if (element.classList.contains('map__pin--main')) {
-          return;
-        } else {
+        // check is it main pin
+        if (!element.classList.contains('map__pin--main')) {
           // remove active pin class/check if it active
           var activePin = document.querySelector('.map__pin--active');
           if (activePin && element !== activePin) {
@@ -223,9 +220,9 @@
     });
   };
 
-  var getUsers = function (howMany) {
+  var getUsers = function (count) {
     var users = [];
-    for (var i = 0; i <= howMany - 1; i++) {
+    for (var i = 0; i <= count - 1; i++) {
       users.push(getRandomUserData());
     }
 
@@ -249,7 +246,7 @@
       fragment.appendChild(generatedPin);
     });
 
-    mapPinsBlock.insertBefore(fragment, mapPinsBlock.children[1]);
+    mapPinsBlock.appendChild(fragment);
 
     addEventListeners();
   };
