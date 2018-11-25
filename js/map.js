@@ -1,33 +1,16 @@
 'use strict';
 
 (function () {
-  var PIN_SIZE_X = 50;
-  var PIN_SIZE_Y = 70;
   var NUMBER_OF_USERS = 8;
-  var PLACES_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-  var AD_TITLE = [
-    'Огромный прекрасный дворец',
-    'Большая уютная квартира',
-    'Маленькая неуютная квартира',
-    'Маленький ужасный дворец',
-    'Красивый гостевой домик',
-    'Некрасивый негостеприимный домик',
-    'Уютное бунгало далеко от моря',
-    'Неуютное бунгало по колено в воде'
-  ];
-  var TIME = ['12:00', '13:00', '14:00'];
-  var FEATURES = ['elevator', 'conditioner', 'wifi', 'dishwasher', 'parking', 'washer'];
-  var PHOTOS = [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ];
   var OFFER_TYPES = {
     'flat': 'Квартира',
     'palace': 'Дворец',
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+
+  var PIN_SIZE_X = 50;
+  var PIN_SIZE_Y = 70;
   var MAP_WIDTH = 1200;
   var MAP_HEIGHT = 630;
 
@@ -41,56 +24,10 @@
   // make it visible
   mapBlock.classList.remove('map--faded');
 
-  var getRandomNumber = window.usefulUtilities.getRandomNumber;
-  var shuffleArray = window.usefulUtilities.shuffleArray;
-  var getRandomArrayValue = window.usefulUtilities.getRandomArrayValue;
   var getWordend = window.usefulUtilities.getWordend;
+  var getRandomUserData = window.userDataGenerator.getRandomUserData;
 
-  // create random array with random length
-  var getRandomSlice = function (arr) {
-    var randomLength = getRandomNumber(0, arr.length - 1);
-
-    return shuffleArray(arr).slice(0, Math.max(randomLength, 1));
-  };
-
-  var avatarIndexs = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8]);
-  var getRandomAvatar = function () {
-    return 'img/avatars/user0' + avatarIndexs.pop() + '.png';
-  };
-
-  var getRandomUserData = function () {
-    var user = {
-      author: {
-        avatar: getRandomAvatar()
-      },
-      offer: {
-        title: getRandomArrayValue(AD_TITLE),
-        address: function () {
-          return user.location.x + ', ' + user.location.y;
-        },
-        price: getRandomNumber(1000, 1000000),
-        type: getRandomArrayValue(PLACES_TYPE),
-        rooms: getRandomNumber(1, 5),
-        guests: getRandomNumber(1, 20),
-        checkin: getRandomArrayValue(TIME),
-        checkout: getRandomArrayValue(TIME),
-        features: getRandomSlice(FEATURES),
-        description: '',
-        photos: shuffleArray(PHOTOS),
-      },
-      location: {
-        x: getRandomNumber(PIN_SIZE_X / 2, MAP_WIDTH - PIN_SIZE_X / 2),
-        y: getRandomNumber(150, MAP_HEIGHT - PIN_SIZE_Y)
-      },
-      // used to open/close popups
-      getUserId: function () {
-        return user.location.x + '_' + user.location.y;
-      }
-    };
-
-    return user;
-  };
-
+  // Render appartament photos
   var renderPhotos = function (template, photosList) {
     var templatePhoto = template.querySelector('.popup__photo');
 
@@ -103,6 +40,7 @@
     }
   };
 
+  // Render user map pin
   var renderUserPin = function (user) {
     var clone = mapPinTemplate.content.cloneNode(true);
     var button = clone.querySelector('.map__pin');
@@ -117,21 +55,21 @@
     return clone;
   };
 
+  // Render appartament features
   var renderFeatures = function (template, featuresList) {
-    var clone = template.cloneNode();
+    template.innerHTML = '';
 
     for (var j = 0; j < featuresList.length; j++) {
-      clone.appendChild(
-          template.querySelector('.popup__feature--' + featuresList[j]).cloneNode(true)
-      );
+      var featureEl = document.createElement('li');
+      featureEl.classList.add('popup__feature', 'popup__feature--' + featuresList[j]);
+      template.appendChild(featureEl);
     }
-
-    template.parentElement.replaceChild(clone, template);
   };
 
+  // Render user card
   var renderUser = function (user) {
     var clone = cardTemplate.content.cloneNode(true);
-    // template links
+
     var templateTitle = clone.querySelector('.popup__title');
     var templateAddress = clone.querySelector('.popup__text--address');
     var templatePrice = clone.querySelector('.popup__text--price');
@@ -162,7 +100,7 @@
     return clone;
   };
 
-  // On cklick
+  // Add on cklick functional for pin(popup open)
   var addEventListeners = function () {
     var pins = document.querySelectorAll('.map__pin');
     var currentActivePopup = null;
@@ -184,15 +122,14 @@
         currentActivePopup.classList.add('hidden');
         currentActivePopup = null;
       }
-
       popup.classList.remove('hidden');
 
       return popup;
     };
 
+    // Add on cklick functional, listen [X] button event
     var handlePopupCloseClick = function (event) {
       event.currentTarget.closest('.popup').classList.add('hidden');
-      // remove pin class
       var activePin = document.querySelector('.map__pin--active');
       activePin.classList.remove('map__pin--active');
       currentActivePopup = null;
@@ -201,9 +138,7 @@
     pins.forEach(function (element) {
       element.addEventListener('click', function (event) {
         currentActivePopup = handleMapPinClick(event);
-        // check is it main pin
         if (!element.classList.contains('map__pin--main')) {
-          // remove active pin class/check if it active
           var activePin = document.querySelector('.map__pin--active');
           if (activePin && element !== activePin) {
             activePin.classList.remove('map__pin--active');
@@ -213,22 +148,30 @@
       });
     });
 
-    // Listen close [X] button event
     document.querySelectorAll('.popup__close').forEach(function (element) {
       currentActivePopup = null;
       element.addEventListener('click', handlePopupCloseClick);
     });
   };
 
+  // Create array of users
   var getUsers = function (count) {
     var users = [];
+    var config = {
+      locationXFrom: PIN_SIZE_X / 2,
+      locationXTo: MAP_WIDTH - PIN_SIZE_X / 2,
+      locationYFrom: 150,
+      locationYTo: MAP_HEIGHT - PIN_SIZE_Y
+    };
+
     for (var i = 0; i <= count - 1; i++) {
-      users.push(getRandomUserData());
+      users.push(getRandomUserData(config));
     }
 
     return users;
   };
 
+  //  Write rendered user cards in DOM
   var render = function () {
     // create fragment to hold all users before append to mapPinsBlock
     var fragment = document.createDocumentFragment();
@@ -253,4 +196,3 @@
 
   render();
 })();
-
