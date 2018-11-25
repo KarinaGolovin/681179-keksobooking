@@ -18,7 +18,7 @@ window.usefulUtilities = {
   },
   // code taken from with minor modifications to pass eslint codestyle
   // https://javascript.ru/forum/misc/36941-smena-okonchaniya-pri-podschjote.html
-  getWordend: function wordend(num, words) {
+  getWordend: function (num, words) {
     num = Math.abs(num % 100);
     var index = 1;
 
