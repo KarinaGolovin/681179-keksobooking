@@ -1,7 +1,6 @@
 'use strict';
 
 window.userDataGenerator = (function () {
-  var NUMBER_OF_USERS = 8;
   var PLACES_TYPE = ['palace', 'flat', 'house', 'bungalo'];
   var AD_TITLE = [
     'Огромный прекрасный дворец',
@@ -34,14 +33,19 @@ window.userDataGenerator = (function () {
   };
 
   // create random unrepeatable avatar
-  var arrayFromNumber = outputArrayNumbersFromNumber(NUMBER_OF_USERS);
-  var avatarIndexs = shuffleArray(arrayFromNumber);
+  var arrayFromNumber = null;
+  var avatarIndexs = null;
   var getRandomAvatar = function () {
     return 'img/avatars/user0' + avatarIndexs.pop() + '.png';
   };
 
   // Random user data generator
   var getRandomUserData = function (config) {
+    if (arrayFromNumber === null) {
+      arrayFromNumber = outputArrayNumbersFromNumber(config.numberOfUsers);
+      avatarIndexs = shuffleArray(arrayFromNumber);
+    }
+
     var user = {
       author: {
         avatar: getRandomAvatar()

@@ -100,31 +100,37 @@
     return clone;
   };
 
-  // Add on cklick functional for pin(popup open)
+  // Add on click functional
   var addEventListeners = function () {
     var pins = document.querySelectorAll('.map__pin');
-    var currentActivePopup = null;
+    var activePopupId = null;
 
-    var handleMapPinClick = function (event) {
-      var popupId = event.currentTarget.getAttribute('data-id');
-
-      if (!popupId) {
-        return currentActivePopup;
-      }
-
+    // Add on click functional for pin(popup open)
+    var openPopupById = function (popupId) {
       var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
 
-      if (!popup || popup === currentActivePopup) {
-        return currentActivePopup;
+      if (!popup) {
+        return;
       }
 
-      if (currentActivePopup) {
-        currentActivePopup.classList.add('hidden');
-        currentActivePopup = null;
-      }
       popup.classList.remove('hidden');
+    };
 
-      return popup;
+    var closePopupById = function (popupId) {
+      var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
+
+      if (!popup) {
+        return;
+      }
+
+      popup.classList.add('hidden');
+    };
+
+    var closeActivePopup = function () {
+      if (activePopupId) {
+        closePopupById(activePopupId);
+        activePopupId = null;
+      }
     };
 
     // Add on cklick functional, listen [X] button event
@@ -132,24 +138,41 @@
       event.currentTarget.closest('.popup').classList.add('hidden');
       var activePin = document.querySelector('.map__pin--active');
       activePin.classList.remove('map__pin--active');
-      currentActivePopup = null;
+      closeActivePopup();
+    };
+
+    var setActivePin = function (element) {
+      if (element.classList.contains('map__pin--main')) {
+        return;
+      }
+      var activePin = document.querySelector('.map__pin--active');
+
+      if (activePin && element !== activePin) {
+        activePin.classList.remove('map__pin--active');
+      }
+
+      element.classList.add('map__pin--active');
+    };
+
+    var handlePinClick = function (event) {
+      var clickedPin = event.currentTarget;
+      var popupId = clickedPin.getAttribute('data-id');
+
+      setActivePin(clickedPin);
+
+      if (popupId !== activePopupId) {
+        closeActivePopup();
+        openPopupById(popupId);
+      }
+
+      activePopupId = popupId;
     };
 
     pins.forEach(function (element) {
-      element.addEventListener('click', function (event) {
-        currentActivePopup = handleMapPinClick(event);
-        if (!element.classList.contains('map__pin--main')) {
-          var activePin = document.querySelector('.map__pin--active');
-          if (activePin && element !== activePin) {
-            activePin.classList.remove('map__pin--active');
-          }
-          element.classList.add('map__pin--active');
-        }
-      });
+      element.addEventListener('click', handlePinClick);
     });
 
     document.querySelectorAll('.popup__close').forEach(function (element) {
-      currentActivePopup = null;
       element.addEventListener('click', handlePopupCloseClick);
     });
   };
@@ -161,7 +184,8 @@
       locationXFrom: PIN_SIZE_X / 2,
       locationXTo: MAP_WIDTH - PIN_SIZE_X / 2,
       locationYFrom: 150,
-      locationYTo: MAP_HEIGHT - PIN_SIZE_Y
+      locationYTo: MAP_HEIGHT - PIN_SIZE_Y,
+      numberOfUsers: NUMBER_OF_USERS
     };
 
     for (var i = 0; i < count; i++) {
