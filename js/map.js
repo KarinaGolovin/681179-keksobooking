@@ -21,22 +21,20 @@
   var mapPinTemplate = document.querySelector('#pin');
   // ad card template
   var cardTemplate = document.querySelector('#card');
-  // make it visible
-  mapBlock.classList.remove('map--faded');
 
   var getWordend = window.usefulUtilities.getWordend;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
 
   // Render appartament photos
-  var renderPhotos = function (template, photosList) {
-    var templatePhoto = template.querySelector('.popup__photo');
+  var renderPhotos = function (element, photosList) {
+    var templatePhoto = element.querySelector('.popup__photo');
 
     templatePhoto.src = photosList[0];
 
     for (var i = 1; i < photosList.length; i++) {
       var clone = templatePhoto.cloneNode(true);
       clone.src = photosList[i];
-      template.appendChild(clone);
+      element.appendChild(clone);
     }
   };
 
@@ -56,13 +54,15 @@
   };
 
   // Render appartament features
-  var renderFeatures = function (template, featuresList) {
-    template.innerHTML = '';
+  var renderFeatures = function (element, featuresList) {
+    while (element.hasChildNodes()) {
+      element.removeChild(element.firstChild);
+    }
 
     for (var j = 0; j < featuresList.length; j++) {
       var featureEl = document.createElement('li');
       featureEl.classList.add('popup__feature', 'popup__feature--' + featuresList[j]);
-      template.appendChild(featureEl);
+      element.appendChild(featureEl);
     }
   };
 
@@ -164,7 +164,7 @@
       locationYTo: MAP_HEIGHT - PIN_SIZE_Y
     };
 
-    for (var i = 0; i <= count - 1; i++) {
+    for (var i = 0; i < count; i++) {
       users.push(getRandomUserData(config));
     }
 
@@ -193,6 +193,8 @@
 
     addEventListeners();
   };
+
+  mapBlock.classList.remove('map--faded');
 
   render();
 })();

@@ -31,5 +31,13 @@ window.usefulUtilities = {
   },
   getRandomArrayValue: function (arr) {
     return arr[window.usefulUtilities.getRandomNumber(0, arr.length - 1)];
-  }
+  },
+  outputArrayNumbersFromNumber: function (number) {
+    var numbersArray = [];
+
+    for (var i = 0; i <= number - 1; i++) {
+      numbersArray.push(i + 1);
+    }
+    return numbersArray;
+  },
 };

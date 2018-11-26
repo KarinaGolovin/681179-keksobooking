@@ -227,6 +227,7 @@ fieldset {
   width: 65px;
   height: 65px;
 
+  /* Changed to be a top of all pins on the map */
   z-index: 2;
 
   cursor: move;

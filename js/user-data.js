@@ -1,6 +1,7 @@
 'use strict';
 
 window.userDataGenerator = (function () {
+  var NUMBER_OF_USERS = 8;
   var PLACES_TYPE = ['palace', 'flat', 'house', 'bungalo'];
   var AD_TITLE = [
     'Огромный прекрасный дворец',
@@ -23,6 +24,7 @@ window.userDataGenerator = (function () {
   var getRandomNumber = window.usefulUtilities.getRandomNumber;
   var shuffleArray = window.usefulUtilities.shuffleArray;
   var getRandomArrayValue = window.usefulUtilities.getRandomArrayValue;
+  var outputArrayNumbersFromNumber = window.usefulUtilities.outputArrayNumbersFromNumber;
 
   // create random array with random length
   var getRandomSlice = function (arr) {
@@ -32,7 +34,8 @@ window.userDataGenerator = (function () {
   };
 
   // create random unrepeatable avatar
-  var avatarIndexs = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8]);
+  var arrayFromNumber = outputArrayNumbersFromNumber(NUMBER_OF_USERS);
+  var avatarIndexs = shuffleArray(arrayFromNumber);
   var getRandomAvatar = function () {
     return 'img/avatars/user0' + avatarIndexs.pop() + '.png';
   };
