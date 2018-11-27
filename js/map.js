@@ -96,7 +96,7 @@
     return clone;
   };
 
-  // Add on click functional
+  // Handle popup close and open
   var addEventListeners = function () {
     var pins = document.querySelectorAll('.map__pin');
     var activePopupId = null;
@@ -126,7 +126,7 @@
       }
     };
 
-    // Add on cklick functional, listen [X] button event
+    // Add on click functional, listen [X] button event
     var handlePopupCloseClick = function (event) {
       event.currentTarget.closest('.popup').classList.add('hidden');
 
@@ -136,7 +136,7 @@
       closeActivePopup();
     };
 
-    // Add on click functional for pin(popup open)
+    // Add on click functional for pin
     var setActivePin = function (element) {
       if (element.classList.contains('map__pin--main')) {
         return;
