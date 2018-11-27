@@ -101,25 +101,22 @@
     var pins = document.querySelectorAll('.map__pin');
     var activePopupId = null;
 
-    // Add on click functional for pin(popup open)
-    var openPopupById = function (popupId) {
+    var togglePopupById = function (popupId, isHidden) {
       var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
 
       if (!popup) {
         return;
       }
 
-      popup.classList.remove('hidden');
+      popup.classList.toggle('hidden', isHidden);
+    };
+
+    var openPopupById = function (popupId) {
+      togglePopupById(popupId, false);
     };
 
     var closePopupById = function (popupId) {
-      var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
-
-      if (!popup) {
-        return;
-      }
-
-      popup.classList.add('hidden');
+      togglePopupById(popupId, true);
     };
 
     var closeActivePopup = function () {
@@ -132,11 +129,14 @@
     // Add on cklick functional, listen [X] button event
     var handlePopupCloseClick = function (event) {
       event.currentTarget.closest('.popup').classList.add('hidden');
+
       var activePin = document.querySelector('.map__pin--active');
       activePin.classList.remove('map__pin--active');
+
       closeActivePopup();
     };
 
+    // Add on click functional for pin(popup open)
     var setActivePin = function (element) {
       if (element.classList.contains('map__pin--main')) {
         return;
