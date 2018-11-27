@@ -55,10 +55,6 @@
 
   // Render appartament features
   var renderFeatures = function (element, featuresList) {
-    while (element.hasChildNodes()) {
-      element.removeChild(element.firstChild);
-    }
-
     for (var j = 0; j < featuresList.length; j++) {
       var featureEl = document.createElement('li');
       featureEl.classList.add('popup__feature', 'popup__feature--' + featuresList[j]);

@@ -23,7 +23,7 @@ window.userDataGenerator = (function () {
   var getRandomNumber = window.usefulUtilities.getRandomNumber;
   var shuffleArray = window.usefulUtilities.shuffleArray;
   var getRandomArrayValue = window.usefulUtilities.getRandomArrayValue;
-  var outputArrayNumbersFromNumber = window.usefulUtilities.outputArrayNumbersFromNumber;
+  var generateSequence = window.usefulUtilities.generateSequence;
 
   // create random array with random length
   var getRandomSlice = function (arr) {
@@ -42,7 +42,7 @@ window.userDataGenerator = (function () {
   // Random user data generator
   var getRandomUserData = function (config) {
     if (arrayFromNumber === null) {
-      arrayFromNumber = outputArrayNumbersFromNumber(config.numberOfUsers);
+      arrayFromNumber = generateSequence(config.numberOfUsers);
       avatarIndexs = shuffleArray(arrayFromNumber);
     }
 
