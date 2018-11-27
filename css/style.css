@@ -227,6 +227,9 @@ fieldset {
   width: 65px;
   height: 65px;
 
+  /* Changed to be a top of all pins on the map */
+  z-index: 2;
+
   cursor: move;
 }
 
@@ -1003,7 +1006,7 @@ fieldset {
 
 .map__card {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top: 150px;
   left: 20px;
 
