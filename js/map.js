@@ -183,14 +183,12 @@
     });
 
     document.addEventListener('keydown', function (event) {
-      // Esc
-      if (event.keyCode === 27) {
+      if (event.keyCode === KEY_CODES.esc) {
         closePopupById(activePopupId);
         resetActivePin();
       }
 
-      // Enter
-      if (event.keyCode === 13 && focusedPin) {
+      if (event.keyCode === KEY_CODES.enter && focusedPin) {
         var popupId = focusedPin.getAttribute('data-id');
         openPopupById(popupId);
       }
@@ -253,6 +251,10 @@
   var fieldsetList = document.querySelectorAll('fieldset');
   var mapFilterList = mapBlock.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
+  var KEY_CODES = {
+    enter: 13,
+    esc: 27
+  };
 
   addressInput.value = (MAIN_PIN_START_X + (START_MAIN_PIN_WIDTH / 2)) + ', ' + (MAIN_PIN_START_Y + (START_MAIN_PIN_HEIGHT / 2));
   adForm.classList.add('ad-form--disabled');
@@ -273,8 +275,8 @@
     }
   });
 
-  // Поведение страницы вначале, при нажатии на main pin
-  mainPin.addEventListener('mouseup', function () {
+
+  var activatePage = function () {
     mapBlock.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
 
@@ -291,7 +293,18 @@
     });
 
     addressInput.disabled = true;
+  };
 
+
+  mainPin.addEventListener('keydown', function (event) {
+    if (event.keyCode === KEY_CODES.enter) {
+      activatePage();
+    }
+  });
+
+  // Поведение страницы вначале, при нажатии на main pin
+  mainPin.addEventListener('mouseup', function () {
+    activatePage();
     // Правильные данные запишу после следующей лекции,
     // когда начнем перетаскивать метку, получая атрибуты(getAttribute) с этого пина
     // пока это подсказка
