@@ -100,6 +100,7 @@
   var addEventListeners = function () {
     var pins = document.querySelectorAll('.map__pin');
     var activePopupId = null;
+    var focusedPin = null;
 
     var togglePopupById = function (popupId, isHidden) {
       var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
@@ -112,28 +113,28 @@
     };
 
     var openPopupById = function (popupId) {
-      togglePopupById(popupId, false);
+      if (popupId !== activePopupId) {
+        closePopupById(activePopupId);
+        togglePopupById(popupId, false);
+      }
+
+      activePopupId = popupId;
     };
 
     var closePopupById = function (popupId) {
+      if (!activePopupId) {
+        return;
+      }
+      activePopupId = null;
       togglePopupById(popupId, true);
     };
 
-    var closeActivePopup = function () {
-      if (activePopupId) {
-        closePopupById(activePopupId);
-        activePopupId = null;
-      }
-    };
-
-    // Add on click functional, listen [X] button event
-    var handlePopupCloseClick = function (event) {
-      event.currentTarget.closest('.popup').classList.add('hidden');
-
+    var resetActivePin = function () {
       var activePin = document.querySelector('.map__pin--active');
-      activePin.classList.remove('map__pin--active');
 
-      closeActivePopup();
+      if (activePin) {
+        activePin.classList.remove('map__pin--active');
+      }
     };
 
     // Add on click functional for pin
@@ -150,26 +151,49 @@
       element.classList.add('map__pin--active');
     };
 
+    // Add on click functional, listen [X] button event
+    var handlePopupCloseClick = function () {
+      closePopupById(activePopupId);
+      resetActivePin();
+    };
+
     var handlePinClick = function (event) {
       var clickedPin = event.currentTarget;
       var popupId = clickedPin.getAttribute('data-id');
-
+      openPopupById(popupId);
       setActivePin(clickedPin);
+    };
 
-      if (popupId !== activePopupId) {
-        closeActivePopup();
-        openPopupById(popupId);
-      }
+    var handlePinFocus = function () {
+      focusedPin = event.currentTarget;
+    };
 
-      activePopupId = popupId;
+    var handlePinBlur = function () {
+      focusedPin = null;
     };
 
     pins.forEach(function (element) {
       element.addEventListener('click', handlePinClick);
+      element.addEventListener('focus', handlePinFocus);
+      element.addEventListener('blur', handlePinBlur);
     });
 
     document.querySelectorAll('.popup__close').forEach(function (element) {
       element.addEventListener('click', handlePopupCloseClick);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      // Esc
+      if (event.keyCode === 27) {
+        closePopupById(activePopupId);
+        resetActivePin();
+      }
+
+      // Enter
+      if (event.keyCode === 13 && focusedPin) {
+        var popupId = focusedPin.getAttribute('data-id');
+        openPopupById(popupId);
+      }
     });
   };
 
@@ -229,8 +253,6 @@
   var fieldsetList = document.querySelectorAll('fieldset');
   var mapFilterList = mapBlock.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
-  var pin = mapPinsBlock.querySelector('.map__pin');
-  var pinList = mapPinsBlock.querySelectorAll('.map__pin');
 
   addressInput.value = (MAIN_PIN_START_X + (START_MAIN_PIN_WIDTH / 2)) + ', ' + (MAIN_PIN_START_Y + (START_MAIN_PIN_HEIGHT / 2));
   adForm.classList.add('ad-form--disabled');
@@ -270,44 +292,9 @@
 
     addressInput.disabled = true;
 
-    // Правильные данные запишу после следующей лекции, когда начнем перетаскивать метку, пока это подсказка
+    // Правильные данные запишу после следующей лекции,
+    // когда начнем перетаскивать метку, получая атрибуты(getAttribute) с этого пина
+    // пока это подсказка
     addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
   });
-
-  var openPopupOnEnter = function () {
-    pinList.forEach (function (element) {
-      element.addEventListener('focus', function (event) {
-        element.addEventListener('keydown', function () {
-          if (event.keyCode === 13) {
-
-            var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
-
-            element.classList.add('map__pin--active');
-            popup.classList.remove('hidden');
-          }
-        });
-      });
-    });
-  };
-
-  // когда Popup не hidden
-  document.addEventListener('keydown', function (event) {
-    if (event.keyCode === 27) {
-      pinList.forEach(function (element) {
-        element.contains('.map__pin--active');
-        var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
-
-        element.classList.remove('map__pin--active');
-        popup.classList.add('hidden');
-      });
-
-      // закрывать открытый попап, убирать
-      // открытому попапу вешать classList.add('hidden');
-      // var activePin = document.querySelector('.map__pin--active');
-      // activePin.classList.remove('map__pin--active');
-      // надо ли удалять что-то еще?
-      // как их проверять по ID? popupId
-    }
-  });
-
 })();
