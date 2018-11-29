@@ -8,19 +8,32 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+  var KEY_CODES = {
+    enter: 13,
+    esc: 27
+  };
 
   var PIN_SIZE_X = 50;
   var PIN_SIZE_Y = 70;
   var MAP_WIDTH = 1200;
   var MAP_HEIGHT = 630;
+  var MAIN_PIN_X_START = 570;
+  var MAIN_PIN_Y_START = 375;
+  var MAIN_PIN_WIDTH_START = 40;
+  var MAIN_PIN_HEIGHT_START = 44;
+  // // Будут использованы в следующем задании
+  // var MAIN_PIN_WIDTH = 62;
+  // var MAIN_PIN_HEIGHT = 84;
 
   var mapBlock = document.querySelector('.map');
-  // place to put generated ad templates via  DocumentFragment
   var mapPinsBlock = mapBlock.querySelector('.map__pins');
-  // place to put generated pin template
   var mapPinTemplate = document.querySelector('#pin');
-  // ad card template
   var cardTemplate = document.querySelector('#card');
+  var mainPin = mapPinsBlock.querySelector('.map__pin--main');
+  var addressInput = document.querySelector('#address');
+  var fieldsetList = document.querySelectorAll('fieldset');
+  var mapFilterList = mapBlock.querySelectorAll('.map__filter');
+  var adForm = document.querySelector('.ad-form');
 
   var getWordend = window.usefulUtilities.getWordend;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
@@ -239,24 +252,11 @@
   render();
 
   // --------module4-task1----------
-  var MAIN_PIN_START_X = 570;
-  var MAIN_PIN_START_Y = 375;
-  var START_MAIN_PIN_WIDTH = 40;
-  var START_MAIN_PIN_HEIGHT = 44;
-  var MAIN_PIN_WIDTH = 62;
-  var MAIN_PIN_HEIGHT = 84;
-  var mainPin = mapPinsBlock.querySelector('.map__pin--main');
-  var pins = mapPinsBlock.querySelectorAll('button');
-  var addressInput = document.querySelector('#address');
-  var fieldsetList = document.querySelectorAll('fieldset');
-  var mapFilterList = mapBlock.querySelectorAll('.map__filter');
-  var adForm = document.querySelector('.ad-form');
-  var KEY_CODES = {
-    enter: 13,
-    esc: 27
-  };
 
-  addressInput.value = (MAIN_PIN_START_X + (START_MAIN_PIN_WIDTH / 2)) + ', ' + (MAIN_PIN_START_Y + (START_MAIN_PIN_HEIGHT / 2));
+
+  var pins = mapPinsBlock.querySelectorAll('button');
+
+  addressInput.value = (MAIN_PIN_X_START + (MAIN_PIN_WIDTH_START / 2)) + ', ' + (MAIN_PIN_Y_START + (MAIN_PIN_HEIGHT_START / 2));
   adForm.classList.add('ad-form--disabled');
 
   fieldsetList.forEach(function (element) {
@@ -275,7 +275,7 @@
     }
   });
 
-
+  // Поведение страницы вначале, при нажатии на main pin
   var activatePage = function () {
     mapBlock.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
@@ -295,14 +295,12 @@
     addressInput.disabled = true;
   };
 
-
   mainPin.addEventListener('keydown', function (event) {
     if (event.keyCode === KEY_CODES.enter) {
       activatePage();
     }
   });
 
-  // Поведение страницы вначале, при нажатии на main pin
   mainPin.addEventListener('mouseup', function () {
     activatePage();
     // Правильные данные запишу после следующей лекции,
