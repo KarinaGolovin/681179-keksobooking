@@ -228,8 +228,12 @@
   var addressInput = document.querySelector('#address');
   var fieldsetList = document.querySelectorAll('fieldset');
   var mapFilterList = mapBlock.querySelectorAll('.map__filter');
+  var adForm = document.querySelector('.ad-form');
+  var pin = mapPinsBlock.querySelector('.map__pin');
+  var pinList = mapPinsBlock.querySelectorAll('.map__pin');
 
   addressInput.value = (MAIN_PIN_START_X + (START_MAIN_PIN_WIDTH / 2)) + ', ' + (MAIN_PIN_START_Y + (START_MAIN_PIN_HEIGHT / 2));
+  adForm.classList.add('ad-form--disabled');
 
   fieldsetList.forEach(function (element) {
     element.disabled = true;
@@ -247,8 +251,11 @@
     }
   });
 
+  // Поведение страницы вначале, при нажатии на main pin
   mainPin.addEventListener('mouseup', function () {
     mapBlock.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+
     fieldsetList.forEach(function (element) {
       element.disabled = false;
     });
@@ -267,14 +274,39 @@
     addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
   });
 
+  var openPopupOnEnter = function () {
+    pinList.forEach (function (element) {
+      element.addEventListener('focus', function (event) {
+        element.addEventListener('keydown', function () {
+          if (event.keyCode === 13) {
+
+            var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
+
+            element.classList.add('map__pin--active');
+            popup.classList.remove('hidden');
+          }
+        });
+      });
+    });
+  };
+
   // когда Popup не hidden
   document.addEventListener('keydown', function (event) {
-    if(event.keyCode === 27) {
+    if (event.keyCode === 27) {
+      pinList.forEach(function (element) {
+        element.contains('.map__pin--active');
+        var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
+
+        element.classList.remove('map__pin--active');
+        popup.classList.add('hidden');
+      });
+
       // закрывать открытый попап, убирать
       // открытому попапу вешать classList.add('hidden');
       // var activePin = document.querySelector('.map__pin--active');
       // activePin.classList.remove('map__pin--active');
       // надо ли удалять что-то еще?
+      // как их проверять по ID? popupId
     }
   });
 
