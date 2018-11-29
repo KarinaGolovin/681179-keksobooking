@@ -214,7 +214,68 @@
     addEventListeners();
   };
 
-  mapBlock.classList.remove('map--faded');
-
   render();
+
+  // --------module4-task1----------
+  var MAIN_PIN_START_X = 570;
+  var MAIN_PIN_START_Y = 375;
+  var START_MAIN_PIN_WIDTH = 40;
+  var START_MAIN_PIN_HEIGHT = 44;
+  var MAIN_PIN_WIDTH = 62;
+  var MAIN_PIN_HEIGHT = 84;
+  var mainPin = mapPinsBlock.querySelector('.map__pin--main');
+  var pins = mapPinsBlock.querySelectorAll('button');
+  var addressInput = document.querySelector('#address');
+  var fieldsetList = document.querySelectorAll('fieldset');
+  var mapFilterList = mapBlock.querySelectorAll('.map__filter');
+
+  addressInput.value = (MAIN_PIN_START_X + (START_MAIN_PIN_WIDTH / 2)) + ', ' + (MAIN_PIN_START_Y + (START_MAIN_PIN_HEIGHT / 2));
+
+  fieldsetList.forEach(function (element) {
+    element.disabled = true;
+  });
+
+  mapFilterList.forEach(function (element) {
+    element.disabled = true;
+  });
+
+  pins.forEach(function (element) {
+    if (element.classList.contains('map__pin--main')) {
+      return;
+    } else {
+      element.classList.add('hidden');
+    }
+  });
+
+  mainPin.addEventListener('mouseup', function () {
+    mapBlock.classList.remove('map--faded');
+    fieldsetList.forEach(function (element) {
+      element.disabled = false;
+    });
+
+    pins.forEach(function (element) {
+      element.classList.remove('hidden');
+    });
+
+    mapFilterList.forEach(function (element) {
+      element.disabled = false;
+    });
+
+    addressInput.disabled = true;
+
+    // Правильные данные запишу после следующей лекции, когда начнем перетаскивать метку, пока это подсказка
+    addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
+  });
+
+  // когда Popup не hidden
+  document.addEventListener('keydown', function (event) {
+    if(event.keyCode === 27) {
+      // закрывать открытый попап, убирать
+      // открытому попапу вешать classList.add('hidden');
+      // var activePin = document.querySelector('.map__pin--active');
+      // activePin.classList.remove('map__pin--active');
+      // надо ли удалять что-то еще?
+    }
+  });
+
 })();
