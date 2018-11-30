@@ -308,4 +308,44 @@
     // пока это подсказка
     addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
   });
+
+  // Room capacity Validity check
+  var roomCount = document.querySelector('#room_number');
+  var questCapacity = document.querySelector('#capacity');
+
+  var roomDependencies = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['2', '3'],
+    '100': ['0']
+  };
+
+  roomCount.addEventListener('change', function (event) {
+    var value = event.target.value;
+    var availableOptions = roomDependencies[value];
+    getAvailableOptions(questCapacity, availableOptions, value);
+  });
+
+  var getAvailableOptions = function (selectElement, availableOptions, value) {
+    var options = selectElement.querySelectorAll('option');
+    if (!value) {
+      options.forEach(function (option) {
+        option.disabled = false;
+      });
+      selectElement.value = '';
+
+      return;
+    }
+
+    if (availableOptions.indexOf(selectElement.value) === -1) {
+      selectElement.value = availableOptions[0];
+    }
+    options.forEach(function (option) {
+      if (option.value && availableOptions.indexOf(option.value) === -1) {
+        option.disabled = true;
+      } else {
+        option.disabled = false;
+      }
+    });
+  };
 })();
