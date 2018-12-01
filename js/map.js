@@ -250,9 +250,6 @@
 
   render();
 
-  // --------module4-task1----------
-
-
   var pins = mapPinsBlock.querySelectorAll('button');
 
   addressInput.value = (MAIN_PIN_X_START + (MAIN_PIN_WIDTH_START / 2)) + ', ' + (MAIN_PIN_Y_START + (MAIN_PIN_HEIGHT_START / 2));
