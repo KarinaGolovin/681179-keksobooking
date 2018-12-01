@@ -21,7 +21,6 @@
   var MAIN_PIN_Y_START = 375;
   var MAIN_PIN_WIDTH_START = 40;
   var MAIN_PIN_HEIGHT_START = 44;
-  // // Будут использованы в следующем задании
   // var MAIN_PIN_WIDTH = 62;
   // var MAIN_PIN_HEIGHT = 84;
 
@@ -268,14 +267,12 @@
   });
 
   pins.forEach(function (element) {
-    if (element.classList.contains('map__pin--main')) {
-      return;
-    } else {
+    if (!element.classList.contains('map__pin--main')) {
       element.classList.add('hidden');
     }
   });
 
-  // Поведение страницы вначале, при нажатии на main pin
+  // First oppening of the page, reaction on main pin move
   var activatePage = function () {
     mapBlock.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
@@ -303,9 +300,8 @@
 
   mainPin.addEventListener('mouseup', function () {
     activatePage();
-    // Правильные данные запишу после следующей лекции,
-    // когда начнем перетаскивать метку, получая атрибуты(getAttribute) с этого пина
-    // пока это подсказка
+
+    // mainPin.getAttribute))
     addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
   });
 
@@ -323,11 +319,11 @@
   roomCount.addEventListener('change', function (event) {
     var value = event.target.value;
     var availableOptions = roomDependencies[value];
-    getAvailableOptions(questCapacity, availableOptions, value);
+    lockUnavailableOptions(questCapacity, availableOptions, value);
   });
 
-  var getAvailableOptions = function (selectElement, availableOptions, value) {
-    var options = selectElement.querySelectorAll('option');
+  var lockUnavailableOptions = function (selectElement, availableOptions, value) {
+    var options = selectElement.childNodes;
     if (!value) {
       options.forEach(function (option) {
         option.disabled = false;
@@ -338,7 +334,7 @@
     }
 
     if (availableOptions.indexOf(selectElement.value) === -1) {
-      selectElement.value = availableOptions[0];
+      selectElement.value = '';
     }
     options.forEach(function (option) {
       if (option.value && availableOptions.indexOf(option.value) === -1) {
