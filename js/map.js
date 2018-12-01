@@ -8,19 +8,31 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+  var KEY_CODES = {
+    enter: 13,
+    esc: 27
+  };
 
   var PIN_SIZE_X = 50;
   var PIN_SIZE_Y = 70;
   var MAP_WIDTH = 1200;
   var MAP_HEIGHT = 630;
+  var MAIN_PIN_X_START = 570;
+  var MAIN_PIN_Y_START = 375;
+  var MAIN_PIN_WIDTH_START = 40;
+  var MAIN_PIN_HEIGHT_START = 44;
+  // var MAIN_PIN_WIDTH = 62;
+  // var MAIN_PIN_HEIGHT = 84;
 
   var mapBlock = document.querySelector('.map');
-  // place to put generated ad templates via  DocumentFragment
   var mapPinsBlock = mapBlock.querySelector('.map__pins');
-  // place to put generated pin template
   var mapPinTemplate = document.querySelector('#pin');
-  // ad card template
   var cardTemplate = document.querySelector('#card');
+  var mainPin = mapPinsBlock.querySelector('.map__pin--main');
+  var addressInput = document.querySelector('#address');
+  var fieldsetList = document.querySelectorAll('fieldset');
+  var mapFilterList = mapBlock.querySelectorAll('.map__filter');
+  var adForm = document.querySelector('.ad-form');
 
   var getWordend = window.usefulUtilities.getWordend;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
@@ -100,6 +112,7 @@
   var addEventListeners = function () {
     var pins = document.querySelectorAll('.map__pin');
     var activePopupId = null;
+    var focusedPin = null;
 
     var togglePopupById = function (popupId, isHidden) {
       var popup = document.querySelector('.map__card[data-id="' + popupId + '"]');
@@ -112,28 +125,28 @@
     };
 
     var openPopupById = function (popupId) {
-      togglePopupById(popupId, false);
+      if (popupId !== activePopupId) {
+        closePopupById(activePopupId);
+        togglePopupById(popupId, false);
+      }
+
+      activePopupId = popupId;
     };
 
     var closePopupById = function (popupId) {
+      if (!activePopupId) {
+        return;
+      }
+      activePopupId = null;
       togglePopupById(popupId, true);
     };
 
-    var closeActivePopup = function () {
-      if (activePopupId) {
-        closePopupById(activePopupId);
-        activePopupId = null;
-      }
-    };
-
-    // Add on click functional, listen [X] button event
-    var handlePopupCloseClick = function (event) {
-      event.currentTarget.closest('.popup').classList.add('hidden');
-
+    var resetActivePin = function () {
       var activePin = document.querySelector('.map__pin--active');
-      activePin.classList.remove('map__pin--active');
 
-      closeActivePopup();
+      if (activePin) {
+        activePin.classList.remove('map__pin--active');
+      }
     };
 
     // Add on click functional for pin
@@ -150,26 +163,47 @@
       element.classList.add('map__pin--active');
     };
 
+    // Add on click functional, listen [X] button event
+    var handlePopupCloseClick = function () {
+      closePopupById(activePopupId);
+      resetActivePin();
+    };
+
     var handlePinClick = function (event) {
       var clickedPin = event.currentTarget;
       var popupId = clickedPin.getAttribute('data-id');
-
+      openPopupById(popupId);
       setActivePin(clickedPin);
+    };
 
-      if (popupId !== activePopupId) {
-        closeActivePopup();
-        openPopupById(popupId);
-      }
+    var handlePinFocus = function () {
+      focusedPin = event.currentTarget;
+    };
 
-      activePopupId = popupId;
+    var handlePinBlur = function () {
+      focusedPin = null;
     };
 
     pins.forEach(function (element) {
       element.addEventListener('click', handlePinClick);
+      element.addEventListener('focus', handlePinFocus);
+      element.addEventListener('blur', handlePinBlur);
     });
 
     document.querySelectorAll('.popup__close').forEach(function (element) {
       element.addEventListener('click', handlePopupCloseClick);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.keyCode === KEY_CODES.esc) {
+        closePopupById(activePopupId);
+        resetActivePin();
+      }
+
+      if (event.keyCode === KEY_CODES.enter && focusedPin) {
+        var popupId = focusedPin.getAttribute('data-id');
+        openPopupById(popupId);
+      }
     });
   };
 
@@ -214,7 +248,100 @@
     addEventListeners();
   };
 
-  mapBlock.classList.remove('map--faded');
-
   render();
+
+  // --------module4-task1----------
+
+
+  var pins = mapPinsBlock.querySelectorAll('button');
+
+  addressInput.value = (MAIN_PIN_X_START + (MAIN_PIN_WIDTH_START / 2)) + ', ' + (MAIN_PIN_Y_START + (MAIN_PIN_HEIGHT_START / 2));
+  adForm.classList.add('ad-form--disabled');
+
+  fieldsetList.forEach(function (element) {
+    element.disabled = true;
+  });
+
+  mapFilterList.forEach(function (element) {
+    element.disabled = true;
+  });
+
+  pins.forEach(function (element) {
+    if (!element.classList.contains('map__pin--main')) {
+      element.classList.add('hidden');
+    }
+  });
+
+  // First oppening of the page, reaction on main pin move
+  var activatePage = function () {
+    mapBlock.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+
+    fieldsetList.forEach(function (element) {
+      element.disabled = false;
+    });
+
+    pins.forEach(function (element) {
+      element.classList.remove('hidden');
+    });
+
+    mapFilterList.forEach(function (element) {
+      element.disabled = false;
+    });
+
+    addressInput.disabled = true;
+  };
+
+  mainPin.addEventListener('keydown', function (event) {
+    if (event.keyCode === KEY_CODES.enter) {
+      activatePage();
+    }
+  });
+
+  mainPin.addEventListener('mouseup', function () {
+    activatePage();
+
+    // mainPin.getAttribute))
+    addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
+  });
+
+  // Room capacity Validity check
+  var roomCount = document.querySelector('#room_number');
+  var questCapacity = document.querySelector('#capacity');
+
+  var roomDependencies = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['2', '3'],
+    '100': ['0']
+  };
+
+  roomCount.addEventListener('change', function (event) {
+    var value = event.target.value;
+    var availableOptions = roomDependencies[value];
+    lockUnavailableOptions(questCapacity, availableOptions, value);
+  });
+
+  var lockUnavailableOptions = function (selectElement, availableOptions, value) {
+    var options = selectElement.childNodes;
+    if (!value) {
+      options.forEach(function (option) {
+        option.disabled = false;
+      });
+      selectElement.value = '';
+
+      return;
+    }
+
+    if (availableOptions.indexOf(selectElement.value) === -1) {
+      selectElement.value = '';
+    }
+    options.forEach(function (option) {
+      if (option.value && availableOptions.indexOf(option.value) === -1) {
+        option.disabled = true;
+      } else {
+        option.disabled = false;
+      }
+    });
+  };
 })();
