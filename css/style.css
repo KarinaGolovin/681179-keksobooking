@@ -631,6 +631,13 @@ fieldset {
           box-shadow: 0 0 2px 2px #ff6547;
 }
 
+.ad-form__element input:focus:invalid,
+.ad-form__element select:focus:invalid,
+.ad-form__element textarea:focus:invalid {
+  outline: none;
+  background-color:  #ffaa99;
+}
+
 .ad-form__element--time {
   -ms-flex-preferred-size: 50%;
       flex-basis: 50%;

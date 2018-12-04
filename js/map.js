@@ -341,4 +341,37 @@
       }
     });
   };
+
+  // Price check
+  var mapTypeToPrice = {
+    palace: 10000,
+    flat: 1000,
+    house: 5000,
+    bungalo: 0
+  };
+
+  var priceInput = document.querySelector('#price');
+  document.querySelector('#type').addEventListener('change', function (event) {
+    var minPrice = mapTypeToPrice[event.target.value];
+    priceInput.setAttribute('placeholder', minPrice);
+    priceInput.setAttribute('min', minPrice);
+  });
+
+  // Time check
+  var timeoutInput = document.querySelector('#timeout');
+  var timeinInput = document.querySelector('#timein');
+  timeinInput.addEventListener('change', function (event) {
+    var time = event.target.value;
+    timeoutInput.setAttribute('placeholder', time);
+    timeoutInput.value = time;
+  });
+
+  // Time input custom validity
+  timeoutInput.addEventListener('input', function () {
+    if (timeoutInput.value !== timeinInput.value) {
+      timeoutInput.setCustomValidity('Время выезда должно совпадать со временем заезда.');
+    } else {
+      timeoutInput.setCustomValidity('');
+    }
+  });
 })();
