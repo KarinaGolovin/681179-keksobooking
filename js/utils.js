@@ -40,4 +40,13 @@ window.usefulUtilities = {
     }
     return numbersArray;
   },
+  playAnimation: function (element) {
+    var removeAnimationClass = function () {
+      element.classList.remove('jump');
+      element.removeEventListener('animationend', removeAnimationClass);
+    };
+    element.addEventListener('animationend', removeAnimationClass);
+
+    element.classList.add('jump');
+  },
 };

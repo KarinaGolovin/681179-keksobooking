@@ -35,6 +35,7 @@
   var adForm = document.querySelector('.ad-form');
 
   var getWordend = window.usefulUtilities.getWordend;
+  var playAnimation = window.usefulUtilities.playAnimation;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
 
   // Render appartament photos
@@ -285,8 +286,6 @@
     mapFilterList.forEach(function (element) {
       element.disabled = false;
     });
-
-    addressInput.disabled = true;
   };
 
   mainPin.addEventListener('keydown', function (event) {
@@ -326,12 +325,13 @@
         option.disabled = false;
       });
       selectElement.value = '';
-
+      playAnimation(questCapacity);
       return;
     }
 
     if (availableOptions.indexOf(selectElement.value) === -1) {
       selectElement.value = '';
+      playAnimation(questCapacity);
     }
     options.forEach(function (option) {
       if (option.value && availableOptions.indexOf(option.value) === -1) {
@@ -344,10 +344,11 @@
 
   // Price check
   var mapTypeToPrice = {
-    palace: 10000,
-    flat: 1000,
-    house: 5000,
-    bungalo: 0
+    '': 'Цена за ночь...',
+    'palace': 10000,
+    'flat': 1000,
+    'house': 5000,
+    'bungalo': 0
   };
 
   var priceInput = document.querySelector('#price');
@@ -358,20 +359,20 @@
   });
 
   // Time check
-  var timeoutInput = document.querySelector('#timeout');
-  var timeinInput = document.querySelector('#timein');
-  timeinInput.addEventListener('change', function (event) {
+  var checkoutInput = document.querySelector('#timeout');
+  var checkinInput = document.querySelector('#timein');
+  checkinInput.addEventListener('change', function (event) {
     var time = event.target.value;
-    timeoutInput.setAttribute('placeholder', time);
-    timeoutInput.value = time;
+    checkoutInput.setAttribute('placeholder', time);
+    checkoutInput.value = time;
   });
 
-  // Time input custom validity
-  timeoutInput.addEventListener('input', function () {
-    if (timeoutInput.value !== timeinInput.value) {
-      timeoutInput.setCustomValidity('Время выезда должно совпадать со временем заезда.');
-    } else {
-      timeoutInput.setCustomValidity('');
+  checkoutInput.addEventListener('change', function (event) {
+    var value = event.target.value;
+
+    if (value !== checkinInput.value) {
+      checkinInput.value = value;
+      playAnimation(checkinInput);
     }
   });
 })();

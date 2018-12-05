@@ -1258,3 +1258,30 @@ fieldset {
   outline: none;
   opacity: 0.6;
 }
+
+/* @keyframes bounce {
+  0% { transform: scale(1)    }
+  50%   { transform: scale(1.1) }
+  100%   { transform: scale(1) }
+}
+
+.jump {
+  animation: bounce 0.5s;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+} */
+
+.jump {
+  animation: .3s jump ease-in alternate;
+}
+
+@keyframes jump {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+  }
+  100% {
+    transform: scale(1.02);
+    box-shadow: 0 3px 15px rgba(0,0,0,.1);
+  }
+}
