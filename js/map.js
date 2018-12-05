@@ -25,7 +25,7 @@
   var MAIN_PIN_HEIGHT_START = 44;
   var MAIN_PIN_WIDTH = 64;
   var MAIN_PIN_MARGIN = MAIN_PIN_WIDTH * 0.3;
-  var MAIN_PIN_HEIGHT = 84;
+  var MAIN_PIN_HEIGHT = 86;
 
   var mapBlock = document.querySelector('.map');
   var mapPinsBlock = mapBlock.querySelector('.map__pins');
@@ -391,8 +391,8 @@
       var deltaX = startPosition.clientX - moveEvt.clientX;
       var deltaY = startPosition.clientY - moveEvt.clientY;
 
-      var pinX = (startPosition.x - deltaX);
-      var pinY = (startPosition.y - deltaY);
+      var pinX = startPosition.x - deltaX;
+      var pinY = startPosition.y - deltaY;
 
       mainPin.style.left = limitValue(pinX, MIN_ACTIVE_MAP_X + MAIN_PIN_MARGIN, mapContainerWidth - (MAIN_PIN_WIDTH + MAIN_PIN_MARGIN)) + 'px';
       mainPin.style.top = limitValue(pinY, MIN_ACTIVE_MAP_Y, MAP_HEIGHT) + 'px';
