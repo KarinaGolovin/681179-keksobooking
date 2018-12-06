@@ -40,4 +40,7 @@ window.usefulUtilities = {
     }
     return numbersArray;
   },
+  limitValue: function (value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
 };

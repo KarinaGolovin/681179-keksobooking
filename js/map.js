@@ -17,12 +17,15 @@
   var PIN_SIZE_Y = 70;
   var MAP_WIDTH = 1200;
   var MAP_HEIGHT = 630;
+  var MIN_ACTIVE_MAP_X = 0;
+  var MIN_ACTIVE_MAP_Y = 130;
   var MAIN_PIN_X_START = 570;
   var MAIN_PIN_Y_START = 375;
   var MAIN_PIN_WIDTH_START = 40;
   var MAIN_PIN_HEIGHT_START = 44;
-  // var MAIN_PIN_WIDTH = 62;
-  // var MAIN_PIN_HEIGHT = 84;
+  var MAIN_PIN_WIDTH = 64;
+  var MAIN_PIN_MARGIN = MAIN_PIN_WIDTH * 0.3;
+  var MAIN_PIN_HEIGHT = 86;
 
   var mapBlock = document.querySelector('.map');
   var mapPinsBlock = mapBlock.querySelector('.map__pins');
@@ -35,6 +38,7 @@
   var adForm = document.querySelector('.ad-form');
 
   var getWordend = window.usefulUtilities.getWordend;
+  var limitValue = window.usefulUtilities.limitValue;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
 
   // Render appartament photos
@@ -285,21 +289,16 @@
     mapFilterList.forEach(function (element) {
       element.disabled = false;
     });
-
-    addressInput.disabled = true;
   };
 
-  mainPin.addEventListener('keydown', function (event) {
+  mainPin.addEventListener('mousedown', function (event) {
     if (event.keyCode === KEY_CODES.enter) {
       activatePage();
     }
   });
 
-  mainPin.addEventListener('mouseup', function () {
+  mainPin.addEventListener('mousedown', function () {
     activatePage();
-
-    // mainPin.getAttribute))
-    addressInput.value = 'X + MAIN_PIN_WIDTH / 2, Y + MAIN_PIN_HEIGHT';
   });
 
   // Room capacity Validity check
@@ -341,4 +340,74 @@
       }
     });
   };
+
+  // Price check
+  var mapTypeToPrice = {
+    palace: 10000,
+    flat: 1000,
+    house: 5000,
+    bungalo: 0
+  };
+
+  var priceInput = document.querySelector('#price');
+  document.querySelector('#type').addEventListener('change', function (event) {
+    var minPrice = mapTypeToPrice[event.target.value];
+    priceInput.setAttribute('placeholder', minPrice);
+    priceInput.setAttribute('min', minPrice);
+  });
+
+  // Time check
+  var timeoutInput = document.querySelector('#timeout');
+  var timeinInput = document.querySelector('#timein');
+  timeinInput.addEventListener('change', function (event) {
+    var time = event.target.value;
+    timeoutInput.setAttribute('placeholder', time);
+    timeoutInput.value = time;
+  });
+
+  // Time input custom validity
+  timeoutInput.addEventListener('input', function () {
+    if (timeoutInput.value !== timeinInput.value) {
+      timeoutInput.setCustomValidity('Время выезда должно совпадать со временем заезда.');
+    } else {
+      timeoutInput.setCustomValidity('');
+    }
+  });
+
+  // ------------main_pin drag-n-drop------------
+
+
+  mainPin.addEventListener('mousedown', function (event) {
+    var mapContainerWidth = mapBlock.clientWidth;
+
+    var startPosition = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+      x: mainPin.offsetLeft,
+      y: mainPin.offsetTop
+    };
+
+    var movePin = function (moveEvt) {
+      var deltaX = startPosition.clientX - moveEvt.clientX;
+      var deltaY = startPosition.clientY - moveEvt.clientY;
+
+      var pinX = startPosition.x - deltaX;
+      var pinY = startPosition.y - deltaY;
+
+      mainPin.style.left = limitValue(pinX, MIN_ACTIVE_MAP_X + MAIN_PIN_MARGIN, mapContainerWidth - (MAIN_PIN_WIDTH + MAIN_PIN_MARGIN)) + 'px';
+      mainPin.style.top = limitValue(pinY, MIN_ACTIVE_MAP_Y, MAP_HEIGHT) + 'px';
+    };
+
+    var stopPin = function () {
+      var pinX = mainPin.offsetLeft + MAIN_PIN_WIDTH / 2;
+      var pinY = mainPin.offsetTop + MAIN_PIN_HEIGHT;
+
+      addressInput.value = pinX + ', ' + pinY;
+      document.removeEventListener('mousemove', movePin);
+      document.removeEventListener('mouseup', stopPin);
+    };
+
+    document.addEventListener('mousemove', movePin);
+    document.addEventListener('mouseup', stopPin);
+  });
 })();
