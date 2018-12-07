@@ -38,6 +38,7 @@
   var adForm = document.querySelector('.ad-form');
 
   var getWordend = window.usefulUtilities.getWordend;
+  var showVisualFeedback = window.usefulUtilities.showVisualFeedback;
   var limitValue = window.usefulUtilities.limitValue;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
 
@@ -325,12 +326,13 @@
         option.disabled = false;
       });
       selectElement.value = '';
-
+      showVisualFeedback(questCapacity);
       return;
     }
 
     if (availableOptions.indexOf(selectElement.value) === -1) {
       selectElement.value = '';
+      showVisualFeedback(questCapacity);
     }
     options.forEach(function (option) {
       if (option.value && availableOptions.indexOf(option.value) === -1) {
@@ -343,10 +345,11 @@
 
   // Price check
   var mapTypeToPrice = {
-    palace: 10000,
-    flat: 1000,
-    house: 5000,
-    bungalo: 0
+    '': 'Цена за ночь...',
+    'palace': 10000,
+    'flat': 1000,
+    'house': 5000,
+    'bungalo': 0
   };
 
   var priceInput = document.querySelector('#price');
@@ -357,21 +360,22 @@
   });
 
   // Time check
-  var timeoutInput = document.querySelector('#timeout');
-  var timeinInput = document.querySelector('#timein');
-  timeinInput.addEventListener('change', function (event) {
-    var time = event.target.value;
-    timeoutInput.setAttribute('placeholder', time);
-    timeoutInput.value = time;
+  var checkoutInput = document.querySelector('#timeout');
+  var checkinInput = document.querySelector('#timein');
+
+  checkinInput.addEventListener('change', function (event) {
+    checkoutInput.setAttribute('placeholder', event.target.value);
+    if (checkoutInput.value !== event.target.value) {
+      showVisualFeedback(checkoutInput);
+    }
+    checkoutInput.value = event.target.value;
   });
 
-  // Time input custom validity
-  timeoutInput.addEventListener('input', function () {
-    if (timeoutInput.value !== timeinInput.value) {
-      timeoutInput.setCustomValidity('Время выезда должно совпадать со временем заезда.');
-    } else {
-      timeoutInput.setCustomValidity('');
+  checkoutInput.addEventListener('change', function (event) {
+    if (checkinInput.value !== event.target.value) {
+      showVisualFeedback(checkinInput);
     }
+    checkinInput.value = event.target.value;
   });
 
   // ------------main_pin drag-n-drop------------
