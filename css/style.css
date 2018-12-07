@@ -635,7 +635,7 @@ fieldset {
 .ad-form__element select:focus:invalid,
 .ad-form__element textarea:focus:invalid {
   outline: none;
-  background-color:  #ffaa99;
+  background-color:  #f7c9c0;
 }
 
 .ad-form__element--time {
@@ -1258,18 +1258,6 @@ fieldset {
   outline: none;
   opacity: 0.6;
 }
-
-/* @keyframes bounce {
-  0% { transform: scale(1)    }
-  50%   { transform: scale(1.1) }
-  100%   { transform: scale(1) }
-}
-
-.jump {
-  animation: bounce 0.5s;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-} */
 
 .jump {
   animation: .3s jump ease-in alternate;

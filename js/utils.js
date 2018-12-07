@@ -40,13 +40,22 @@ window.usefulUtilities = {
     }
     return numbersArray;
   },
-  playAnimation: function (element) {
+  showVisualFeedback: function (element, type) {
+    var defaultType = 'jump';
+    var classMap = {
+      jump: 'jump'
+    };
+
+    if (!type) {
+      type = defaultType;
+    }
+
     var removeAnimationClass = function () {
-      element.classList.remove('jump');
+      element.classList.remove(classMap[type]);
       element.removeEventListener('animationend', removeAnimationClass);
     };
     element.addEventListener('animationend', removeAnimationClass);
 
-    element.classList.add('jump');
+    element.classList.add(classMap[type]);
   },
 };

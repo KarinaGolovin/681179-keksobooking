@@ -35,7 +35,7 @@
   var adForm = document.querySelector('.ad-form');
 
   var getWordend = window.usefulUtilities.getWordend;
-  var playAnimation = window.usefulUtilities.playAnimation;
+  var showVisualFeedback = window.usefulUtilities.showVisualFeedback;
   var getRandomUserData = window.userDataGenerator.getRandomUserData;
 
   // Render appartament photos
@@ -325,13 +325,13 @@
         option.disabled = false;
       });
       selectElement.value = '';
-      playAnimation(questCapacity);
+      showVisualFeedback(questCapacity);
       return;
     }
 
     if (availableOptions.indexOf(selectElement.value) === -1) {
       selectElement.value = '';
-      playAnimation(questCapacity);
+      showVisualFeedback(questCapacity);
     }
     options.forEach(function (option) {
       if (option.value && availableOptions.indexOf(option.value) === -1) {
@@ -361,18 +361,19 @@
   // Time check
   var checkoutInput = document.querySelector('#timeout');
   var checkinInput = document.querySelector('#timein');
+
   checkinInput.addEventListener('change', function (event) {
-    var time = event.target.value;
-    checkoutInput.setAttribute('placeholder', time);
-    checkoutInput.value = time;
+    checkoutInput.setAttribute('placeholder', event.target.value);
+    if (checkoutInput.value !== event.target.value) {
+      showVisualFeedback(checkoutInput);
+    }
+    checkoutInput.value = event.target.value;
   });
 
   checkoutInput.addEventListener('change', function (event) {
-    var value = event.target.value;
-
-    if (value !== checkinInput.value) {
-      checkinInput.value = value;
-      playAnimation(checkinInput);
+    if (checkinInput.value !== event.target.value) {
+      showVisualFeedback(checkinInput);
     }
+    checkinInput.value = event.target.value;
   });
 })();
