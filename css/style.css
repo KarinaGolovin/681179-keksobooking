@@ -631,9 +631,9 @@ fieldset {
           box-shadow: 0 0 2px 2px #ff6547;
 }
 
-.ad-form__element input:focus:invalid,
-.ad-form__element select:focus:invalid,
-.ad-form__element textarea:focus:invalid {
+.ad-form__element input.is-invalid,
+.ad-form__element select.is-invalid,
+.ad-form__element textarea.is-invalid {
   outline: none;
   background-color:  #f7c9c0;
 }

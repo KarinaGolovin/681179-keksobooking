@@ -369,6 +369,7 @@
       showVisualFeedback(checkoutInput);
     }
     checkoutInput.value = event.target.value;
+    applyInputValidation(checkoutInput);
   });
 
   checkoutInput.addEventListener('change', function (event) {
@@ -376,11 +377,27 @@
       showVisualFeedback(checkinInput);
     }
     checkinInput.value = event.target.value;
+    applyInputValidation(checkinInput);
   });
 
-  // ------------main_pin drag-n-drop------------
+  // Invalid input check to highlight
+  var applyInputValidation = function (input) {
+    var isValid = input.validity.valid;
 
+    input.classList.toggle('is-invalid', !isValid);
+  };
 
+  adForm.addEventListener('input', function (event) {
+    if (event.target.classList.contains('is-invalid')) {
+      applyInputValidation(event.target);
+    }
+  });
+
+  adForm.addEventListener('focusout', function (event) {
+    applyInputValidation(event.target);
+  });
+
+  // Main_pin drag-n-drop
   mainPin.addEventListener('mousedown', function (event) {
     var mapContainerWidth = mapBlock.clientWidth;
 
