@@ -431,4 +431,35 @@
     document.addEventListener('mousemove', movePin);
     document.addEventListener('mouseup', stopPin);
   });
+
+  // Show avatar preview
+  var handleFileSelect = function (event) {
+    var fileList = event.target.files;
+    var file = fileList[0];
+
+    var avatarInsert = document.querySelector('.ad-form-header__preview');
+    var previewImg = avatarInsert.querySelector('img');
+    previewImg.src = URL.createObjectURL(file);
+  };
+  var avatarInput = document.querySelector('#avatar');
+  avatarInput.addEventListener('change', handleFileSelect, false);
+
+  // Show uploaded fotos
+  var handleFilesUpload = function (event) {
+    var fileList = event.target.files;
+    var photoFormInsert = document.querySelector('.ad-form__photo-container');
+
+    for (var i = 0; i < fileList.length; i++) {
+      var imageContainer = document.createElement('div');
+      imageContainer.classList.add('ad-form__photo');
+
+      var image = URL.createObjectURL(fileList[i]);
+      var imageElement = document.createElement('img');
+      imageElement.classList.add('ad-form__photo--element');
+      imageElement.src = image;
+      imageContainer.appendChild(imageElement);
+      photoFormInsert.appendChild(imageContainer);
+    }
+  };
+  document.querySelector('.ad-form__upload').addEventListener('change', handleFilesUpload, false);
 })();
