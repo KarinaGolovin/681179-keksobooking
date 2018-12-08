@@ -328,6 +328,13 @@ fieldset {
   fill: #ffffff;
 }
 
+.map__pin:not(.map__pin--main) {
+  display: none;
+}
+
+.map--active .map__pin:not(.map__pin--main) {
+  display: inline-block;
+}
 
 /**
  * Фильтры объявления
