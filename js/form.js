@@ -19,24 +19,38 @@
   roomCount.addEventListener('change', function (event) {
     var value = event.target.value;
     var availableOptions = roomDependencies[value];
-    lockUnavailableOptions(questCapacity, availableOptions, value);
+
+    if (!value) {
+      resetAllOptions(questCapacity);
+    } else {
+      lockUnavailableOptions(questCapacity, availableOptions);
+    }
   });
 
-  var lockUnavailableOptions = function (selectElement, availableOptions, value) {
+  var resetAllOptions = function (selectElement) {
     var options = selectElement.childNodes;
-    if (!value) {
-      options.forEach(function (option) {
-        option.disabled = false;
-      });
+    var isDefaultValue = selectElement.value === '';
+
+    options.forEach(function (option) {
+      option.disabled = false;
+    });
+
+    if (!isDefaultValue) {
+      selectElement.value = '';
+      showVisualFeedback(selectElement);
+    }
+  };
+
+  var lockUnavailableOptions = function (selectElement, availableOptions) {
+    var options = selectElement.childNodes;
+    var isDefaultValue = selectElement.value === '';
+    var isOptionAvailable = availableOptions.indexOf(selectElement.value) !== -1;
+
+    if (!isOptionAvailable && !isDefaultValue) {
       selectElement.value = '';
       showVisualFeedback(questCapacity);
-      return;
     }
 
-    if (availableOptions.indexOf(selectElement.value) === -1) {
-      selectElement.value = '';
-      showVisualFeedback(questCapacity);
-    }
     options.forEach(function (option) {
       if (option.value && availableOptions.indexOf(option.value) === -1) {
         option.disabled = true;
@@ -72,7 +86,7 @@
       showVisualFeedback(checkoutInput);
     }
     checkoutInput.value = event.target.value;
-    applyInputValidation(checkoutInput);
+    toggleInputValididy(checkoutInput);
   });
 
   checkoutInput.addEventListener('change', function (event) {
@@ -80,11 +94,11 @@
       showVisualFeedback(checkinInput);
     }
     checkinInput.value = event.target.value;
-    applyInputValidation(checkinInput);
+    toggleInputValididy(checkinInput);
   });
 
   // Invalid input check to highlight
-  var applyInputValidation = function (input) {
+  var toggleInputValididy = function (input) {
     var isValid = input.validity.valid;
 
     input.classList.toggle('is-invalid', !isValid);
@@ -92,12 +106,12 @@
 
   adForm.addEventListener('input', function (event) {
     if (event.target.classList.contains('is-invalid')) {
-      applyInputValidation(event.target);
+      toggleInputValididy(event.target);
     }
   });
 
   adForm.addEventListener('focusout', function (event) {
-    applyInputValidation(event.target);
+    toggleInputValididy(event.target);
   });
 
   // Show avatar preview

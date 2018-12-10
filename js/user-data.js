@@ -1,6 +1,6 @@
 'use strict';
 
-window.userDataGenerator = (function () {
+window.userData = (function () {
   var PLACES_TYPE = ['palace', 'flat', 'house', 'bungalo'];
   var AD_TITLE = [
     'Огромный прекрасный дворец',

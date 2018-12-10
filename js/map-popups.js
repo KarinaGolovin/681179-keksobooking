@@ -20,7 +20,7 @@ window.initMapPopup = function (config) {
 
   var openPopupById = function (popupId) {
     if (popupId !== activePopupId) {
-      closePopupById(activePopupId);
+      closePopup();
       togglePopupById(popupId, false);
     }
 
@@ -31,26 +31,27 @@ window.initMapPopup = function (config) {
     activePopupId = popupId;
   };
 
-  var closePopupById = function (popupId) {
+  var closePopup = function () {
     if (!activePopupId) {
       return;
     }
+
+    togglePopupById(activePopupId, true);
     activePopupId = null;
-    togglePopupById(popupId, true);
 
     if (typeof onClose === 'function') {
-      onClose(popupId);
+      onClose();
     }
   };
 
   // Add on click functional, listen [X] button event
   var handlePopupCloseClick = function () {
-    closePopupById(activePopupId);
+    closePopup();
   };
 
   document.addEventListener('keydown', function (event) {
     if (event.keyCode === KEY_CODES.esc) {
-      closePopupById(activePopupId);
+      closePopup();
     }
   });
 
@@ -60,6 +61,6 @@ window.initMapPopup = function (config) {
 
   return {
     openPopupById: openPopupById,
-    closePopupById: closePopupById
+    closePopup: closePopup
   };
 };

@@ -37,7 +37,7 @@
   var mapContainerWidth = mapBlock.clientWidth;
   var limitValue = window.usefulUtilities.limitValue;
   var getWordend = window.usefulUtilities.getWordend;
-  var getRandomUserData = window.userDataGenerator.getRandomUserData;
+  var getRandomUserData = window.userData.getRandomUserData;
 
   // Render appartament photos
   var renderPhotos = function (element, photosList) {
@@ -129,7 +129,7 @@
   };
 
   //  Write rendered user cards in DOM
-  var render = function () {
+  var renderUserInformation = function () {
     // create fragment to hold all users before append to mapPinsBlock
     var fragment = document.createDocumentFragment();
     var users = getUsers(NUMBER_OF_USERS);
@@ -179,12 +179,18 @@
   };
 
   var initPin = function () {
+    var handleKeyPress = function (event) {
+      if (event.keyCode === KEY_CODES.enter) {
+        activatePage();
+      }
+    };
+
     mainPin.addEventListener('focus', function () {
-      mainPin.addEventListener('keypress', function (event) {
-        if (event.keyCode === KEY_CODES.enter) {
-          activatePage();
-        }
-      });
+      mainPin.addEventListener('keypress', handleKeyPress);
+    });
+
+    mainPin.addEventListener('blur', function () {
+      mainPin.removeEventListener('keypress', handleKeyPress);
     });
 
     mainPin.addEventListener('mousedown', function () {
@@ -204,7 +210,7 @@
   };
 
   var init = function () {
-    render();
+    renderUserInformation();
     window.initMapPins();
     initForm();
     initPin();
