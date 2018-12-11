@@ -129,7 +129,7 @@
   };
 
   //  Write rendered user cards in DOM
-  var renderUserInformation = function () {
+  var renderUserCards = function () {
     // create fragment to hold all users before append to mapPinsBlock
     var fragment = document.createDocumentFragment();
     var users = getUsers(NUMBER_OF_USERS);
@@ -210,7 +210,7 @@
   };
 
   var init = function () {
-    renderUserInformation();
+    renderUserCards();
     window.initMapPins();
     initForm();
     initPin();

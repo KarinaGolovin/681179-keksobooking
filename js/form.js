@@ -48,7 +48,7 @@
 
     if (!isOptionAvailable && !isDefaultValue) {
       selectElement.value = '';
-      showVisualFeedback(questCapacity);
+      showVisualFeedback(selectElement);
     }
 
     options.forEach(function (option) {
