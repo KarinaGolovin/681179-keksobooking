@@ -1,7 +1,17 @@
 'use strict';
 
 (function () {
+  var KEY_CODES = window.constants.KEY_CODES;
+
+  var mapBlock = document.querySelector('.map');
+  var fieldsetList = document.querySelectorAll('fieldset');
+  var mapFilterList = mapBlock.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
+  var resetButton = document.querySelector('.ad-form__reset');
+  var submitButton = document.querySelector('.ad-form__submit');
+  var main = document.querySelector('main');
+  var errorPopupTemplate = document.querySelector('#error');
+  var successPopupTemplate = document.querySelector('#success');
 
   var showVisualFeedback = window.usefulUtilities.showVisualFeedback;
 
@@ -146,4 +156,90 @@
   };
 
   document.querySelector('.ad-form__upload').addEventListener('change', handleFilesUpload, false);
+
+  // --------- Submit - Reset
+
+  var resetForm = function () {
+    adForm.reset();
+  };
+
+  var submitAdForm = function () {
+    event.preventDefault();
+    var formData = new FormData(event.currentTarget);
+
+    var resetPage = function () {
+      mapBlock.classList.add('map--faded');
+      adForm.classList.add('ad-form--disabled');
+
+      fieldsetList.forEach(function (element) {
+        element.disabled = true;
+      });
+
+      mapBlock.classList.remove('map--active');
+
+      mapFilterList.forEach(function (element) {
+        element.disabled = true;
+      });
+    };
+
+    var onFormSave = function () {
+      resetPage();
+      resetForm();
+      var cloneSuccessPopupTemplate = successPopupTemplate.cloneNode(true);
+
+      main.appendChild(cloneSuccessPopupTemplate);
+
+      var closeSuccesMessage = function () {
+        var succesPopup = main.querySelector('.success');
+        document.removeEventListener('keydown', handleKeyPress);
+        document.removeEventListener('click', closeMessageOnOutClick);
+        main.removeChild(succesPopup);
+      };
+
+      var closeMessageOnOutClick = function (event) {
+        event.preventDefault();
+        if (!event.target.closest('.popup-error')) {
+          closeSuccesMessage();
+        }
+      };
+
+      var handleKeyPress = function (event) {
+        if (event.keyCode === KEY_CODES.esc) {
+          closeSuccesMessage();
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyPress);
+      document.addEventListener('click', closeMessageOnOutClick);
+    };
+
+    var showSubmitFormError = function () {
+      var cloneErrorTemplate = errorPopupTemplate.content.cloneNode(true);
+      var errorMessage = cloneErrorTemplate.querySelector('.error__message');
+      errorMessage.textContent = 'Ошибка заполнения. Пожалуйста, исправьте форму и попробуйте еще раз.';
+      var errorMessageButton = cloneErrorTemplate.querySelector('.error__button');
+
+      main.appendChild(cloneErrorTemplate);
+
+      var handleKeyPressOnError = function (event) {
+        if (event.keyCode === KEY_CODES.esc) {
+          closeErrorMessage();
+        }
+      };
+
+      var closeErrorMessage = function () {
+        var errorPopup = main.querySelector('.error');
+        document.removeEventListener('keydown', handleKeyPressOnError);
+        errorMessageButton.removeEventListener('click', closeErrorMessage);
+        main.removeChild(errorPopup);
+      };
+
+      document.addEventListener('keydown', handleKeyPressOnError);
+      errorMessageButton.addEventListener('click', closeErrorMessage);
+    };
+
+    window.backend.save(onFormSave, showSubmitFormError, formData);
+  };
+  adForm.addEventListener('submit', submitAdForm);
+  resetButton.addEventListener('reset', resetForm);
 })();
