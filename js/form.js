@@ -7,11 +7,12 @@
   var fieldsetList = document.querySelectorAll('fieldset');
   var mapFilterList = mapBlock.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
-  var resetButton = document.querySelector('.ad-form__reset');
-  var submitButton = document.querySelector('.ad-form__submit');
   var main = document.querySelector('main');
   var errorPopupTemplate = document.querySelector('#error');
   var successPopupTemplate = document.querySelector('#success');
+  var photoFormInsert = document.querySelector('.ad-form__photo-container');
+  var avatarInsert = document.querySelector('.ad-form-header__preview');
+  var previewImg = avatarInsert.querySelector('img');
 
   var showVisualFeedback = window.usefulUtilities.showVisualFeedback;
 
@@ -128,9 +129,6 @@
   var handleFileSelect = function (event) {
     var fileList = event.target.files;
     var file = fileList[0];
-
-    var avatarInsert = document.querySelector('.ad-form-header__preview');
-    var previewImg = avatarInsert.querySelector('img');
     previewImg.src = URL.createObjectURL(file);
   };
 
@@ -140,7 +138,6 @@
   // Show uploaded fotos
   var handleFilesUpload = function (event) {
     var fileList = event.target.files;
-    var photoFormInsert = document.querySelector('.ad-form__photo-container');
 
     for (var i = 0; i < fileList.length; i++) {
       var imageContainer = document.createElement('div');
@@ -160,7 +157,16 @@
   // --------- Submit - Reset
 
   var resetForm = function () {
-    adForm.reset();
+    adForm.querySelectorAll('.is-invalid').forEach(function (element) {
+      element.classList.remove('is-invalid');
+    });
+
+    previewImg.src = 'img/muffin-grey.svg';
+    var photoFormElements = photoFormInsert.querySelectorAll('.ad-form__photo');
+
+    photoFormElements.forEach(function (element) {
+      photoFormInsert.removeChild(element);
+    });
   };
 
   var submitAdForm = function () {
@@ -240,6 +246,61 @@
 
     window.backend.save(onFormSave, showSubmitFormError, formData);
   };
-  adForm.addEventListener('submit', submitAdForm);
-  resetButton.addEventListener('reset', resetForm);
+
+  var addressInput = document.querySelector('#address');
+  window.keksForm = {
+    init: function (config) {
+      var addressSeletor = window.mapAddressSelector.init({
+        containerWidth: mapBlock.clientWidth,
+        onActivate: function () {
+          config.onFormActivate();
+        },
+        onLocationChange: function (pinX, pinY) {
+          addressInput.value = pinX + ', ' + pinY;
+
+          if (!addressInput.defaultValue) {
+            addressInput.defaultValue = pinX + ', ' + pinY;
+          }
+        }
+      });
+
+      adForm.classList.add('ad-form--disabled');
+
+      fieldsetList.forEach(function (element) {
+        element.disabled = true;
+      });
+
+      mapFilterList.forEach(function (element) {
+        element.disabled = true;
+      });
+
+      mapFilterList.forEach(function (element) {
+        element.disabled = false;
+      });
+
+      adForm.addEventListener('submit', submitAdForm);
+      adForm.addEventListener('reset', function (event) {
+        resetForm(event);
+        addressSeletor.reset();
+      });
+    },
+    handlePageActivate: function () {
+      adForm.classList.remove('ad-form--disabled');
+
+      fieldsetList.forEach(function (element) {
+        element.disabled = false;
+      });
+    },
+    handlePageReset: function () {
+      adForm.classList.add('ad-form--disabled');
+
+      fieldsetList.forEach(function (element) {
+        element.disabled = true;
+      });
+
+      mapFilterList.forEach(function (element) {
+        element.disabled = true;
+      });
+    }
+  };
 })();

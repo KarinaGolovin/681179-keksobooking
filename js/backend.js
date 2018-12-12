@@ -43,8 +43,6 @@
         method: 'POST',
         data: data
       });
-
-      // onError('Ooooops');
     },
     load: function (onLoad, onError) {
       load({
@@ -53,8 +51,6 @@
         onError: onError,
         method: 'GET'
       });
-
-      // onError('Ooooops');
     }
   };
 })();
