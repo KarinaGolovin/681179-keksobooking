@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  // var NUMBER_OF_USERS = 8;
   var OFFER_TYPES = {
     'flat': 'Квартира',
     'palace': 'Дворец',
@@ -12,8 +11,6 @@
 
   var PIN_SIZE_X = 50;
   var PIN_SIZE_Y = 70;
-  // var MAP_WIDTH = 1200;
-
 
   var main = document.querySelector('main');
   var mapBlock = document.querySelector('.map');
@@ -23,7 +20,6 @@
   var errorPopupTemplate = document.querySelector('#error');
 
   var getWordend = window.usefulUtilities.getWordend;
-  // var getRandomUserData = window.userData.getRandomUserData;
 
   // Render appartament photos
   var renderPhotos = function (element, photosList) {
@@ -99,10 +95,13 @@
 
   //  Write rendered user cards in DOM
   var renderUserCards = function (usersList) {
-    // create fragment to hold all users before append to mapPinsBlock
     var fragment = document.createDocumentFragment();
 
     usersList.forEach(function (user) {
+      if (!user.offer) {
+        return;
+      }
+
       var userId = user.location.x + '_' + user.location.y;
       var generatedUser = renderUser(user);
       var generatedPin = renderUserPin(user);
@@ -112,24 +111,23 @@
 
       fragment.appendChild(generatedUser);
       fragment.appendChild(generatedPin);
-
-      mapPinsBlock.appendChild(fragment);
     });
+
+    mapPinsBlock.appendChild(fragment);
   };
 
   var onErrorFunction = function (message) {
     var cloneErrorTemplate = errorPopupTemplate.content.cloneNode(true);
     var errorMessage = cloneErrorTemplate.querySelector('.error__message');
     errorMessage.textContent = message;
-    var errorMessageButton = cloneErrorTemplate.querySelector('.error__button');
+    var errorBlock = cloneErrorTemplate.querySelector('.error');
 
     main.appendChild(cloneErrorTemplate);
 
     var closeErrorMessage = function () {
-      var errorPopup = main.querySelector('.error');
-      document.removeEventListener('keypress', handleKeyPress);
-      errorMessageButton.removeEventListener('click', closeErrorMessage);
-      main.removeChild(errorPopup);
+      document.removeEventListener('keydown', handleKeyPress);
+      errorBlock.removeEventListener('click', closeErrorMessageOnOutClick);
+      main.removeChild(errorBlock);
 
       resetPage();
     };
@@ -140,8 +138,15 @@
       }
     };
 
-    document.addEventListener('keypress', handleKeyPress);
-    errorMessageButton.addEventListener('click', closeErrorMessage);
+    var closeErrorMessageOnOutClick = function (event) {
+      event.preventDefault();
+      if (!event.target.classList.contains('error__message')) {
+        closeErrorMessage();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    errorBlock.addEventListener('click', closeErrorMessageOnOutClick);
   };
 
 

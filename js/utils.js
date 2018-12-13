@@ -1,11 +1,9 @@
 'use strict';
 
 window.usefulUtilities = {
-  // get random number in the range from...to
   getRandomNumber: function (minNumber, maxNumber) {
     return Math.floor(minNumber + (Math.random() * (maxNumber + 1 - minNumber)));
   },
-  // shuffle array for random picking
   shuffleArray: function (array) {
     var newArray = array.slice();
     for (var i = newArray.length - 1; i > 0; i--) {

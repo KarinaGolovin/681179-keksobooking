@@ -9,23 +9,19 @@ var MAIN_PIN_MARGIN = MAIN_PIN_WIDTH * 0.3;
 var KEY_CODES = window.constants.KEY_CODES;
 var MAIN_PIN_X_START = 570;
 var MAIN_PIN_Y_START = 375;
-var MAIN_PIN_WIDTH_START = 40;
-var MAIN_PIN_HEIGHT_START = 44;
 
 window.mapAddressSelector = (function () {
   var limitValue = window.usefulUtilities.limitValue;
 
-  var defaultPositionX = MAIN_PIN_X_START + MAIN_PIN_WIDTH_START / 2;
-  var defaultPositionY = MAIN_PIN_Y_START + MAIN_PIN_HEIGHT_START / 2;
   var elementInitialPositionX = null;
   var elementInitialPositionY = null;
 
-  var locationX = defaultPositionX;
-  var locationY = defaultPositionY;
+  var locationX = null;
+  var locationY = null;
 
   var updateLocation = function (pinX, pinY) {
-    locationX = pinX + MAIN_PIN_WIDTH / 2;
-    locationY = pinY + MAIN_PIN_HEIGHT;
+    locationX = pinX;
+    locationY = pinY;
   };
 
   var init = function (config) {
@@ -58,11 +54,11 @@ window.mapAddressSelector = (function () {
     window.mapUtils.createDraggablePin({
       element: mainPin,
       onDragStop: function (pinX, pinY) {
-        updateLocation(pinX, pinY);
+        updateLocation(pinX + MAIN_PIN_WIDTH / 2, pinY + MAIN_PIN_HEIGHT);
         onLocationChange(locationX, locationY);
       },
       onDragMove: function (pinX, pinY) {
-        updateLocation(pinX, pinY);
+        updateLocation(pinX + MAIN_PIN_WIDTH / 2, pinY + MAIN_PIN_HEIGHT);
 
         mainPin.style.left = limitValue(pinX, MIN_ACTIVE_MAP_X + MAIN_PIN_MARGIN, containerWidth - (MAIN_PIN_WIDTH + MAIN_PIN_MARGIN)) + 'px';
         mainPin.style.top = limitValue(pinY, MIN_ACTIVE_MAP_Y, MAP_HEIGHT) + 'px';
@@ -77,10 +73,16 @@ window.mapAddressSelector = (function () {
         };
       },
       reset: function () {
-        updateLocation(elementInitialPositionX, elementInitialPositionY);
+        updateLocation(elementInitialPositionX + MAIN_PIN_WIDTH / 2, elementInitialPositionY + MAIN_PIN_HEIGHT);
         mainPin.style.left = elementInitialPositionX + 'px';
         mainPin.style.top = elementInitialPositionY + 'px';
         onLocationChange(locationX, locationY);
+      },
+      resetToStartPosition: function () {
+        mainPin.style.left = elementInitialPositionX + 'px';
+        mainPin.style.top = elementInitialPositionY + 'px';
+        updateLocation(MAIN_PIN_X_START, MAIN_PIN_Y_START);
+        onLocationChange(MAIN_PIN_X_START, MAIN_PIN_Y_START);
       }
     };
   };
