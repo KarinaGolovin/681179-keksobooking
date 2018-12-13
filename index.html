@@ -178,10 +178,9 @@
           <label class="ad-form__label">Фотографии жилья</label>
           <div class="ad-form__photo-container">
             <div class="ad-form__upload">
-              <input type="file" accept=".png, .jpg, .jpeg, .bmp" id="images" name="images" class="ad-form__input visually-hidden" required>
+              <input type="file" accept=".png, .jpg, .jpeg, .bmp" id="images" name="images" class="ad-form__input visually-hidden" multiple required>
               <label for="images" class="ad-form__drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
             </div>
-            <div class="ad-form__photo"></div>
           </div>
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--submit">
@@ -245,8 +244,13 @@
       <button class="error__button" href="#">Попробовать снова</button>
     </div>
   </template>
+  <script src="js/constant.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/user-data.js"></script>
+  <script src="js/map-popups.js"></script>
+  <script src="js/map-pins.js"></script>
+  <script src="js/map-utils.js"></script>
   <script src="js/map.js"></script>
+  <script src="js/form.js"></script>
 </body>
 </html>

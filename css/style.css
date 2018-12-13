@@ -328,6 +328,13 @@ fieldset {
   fill: #ffffff;
 }
 
+.map__pin:not(.map__pin--main) {
+  display: none;
+}
+
+.map--active .map__pin:not(.map__pin--main) {
+  display: inline-block;
+}
 
 /**
  * Фильтры объявления
@@ -631,9 +638,9 @@ fieldset {
           box-shadow: 0 0 2px 2px #ff6547;
 }
 
-.ad-form__element input:focus:invalid,
-.ad-form__element select:focus:invalid,
-.ad-form__element textarea:focus:invalid {
+.ad-form__element input.is-invalid,
+.ad-form__element select.is-invalid,
+.ad-form__element textarea.is-invalid {
   outline: none;
   background-color:  #f7c9c0;
 }
@@ -824,6 +831,19 @@ fieldset {
 
   background-color: #e4e4de;
   border-radius: 5px;
+
+  position: relative;
+  display: block;
+  overflow:hidden;
+}
+
+.ad-form__photo--element {
+  max-height: 70px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 
 .ad-form__element--submit {
