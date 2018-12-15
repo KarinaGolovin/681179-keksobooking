@@ -1200,7 +1200,7 @@ fieldset {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 4;
 
   -webkit-box-sizing: border-box;
           box-sizing: border-box;

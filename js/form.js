@@ -2,6 +2,7 @@
 
 (function () {
   var KEY_CODES = window.constants.KEY_CODES;
+  var DEFAULT_AVATAR = 'img/muffin-grey.svg';
 
   var mapBlock = document.querySelector('.map');
   var fieldsetList = document.querySelectorAll('fieldset');
@@ -156,11 +157,12 @@
 
   // Submit - Reset
   var resetForm = function () {
+    adForm.reset();
     adForm.querySelectorAll('.is-invalid').forEach(function (element) {
       element.classList.remove('is-invalid');
     });
 
-    previewImg.src = 'img/muffin-grey.svg';
+    previewImg.src = DEFAULT_AVATAR;
 
     var photoFormElements = photoFormInsert.querySelectorAll('.ad-form__photo');
     photoFormElements.forEach(function (element) {
@@ -169,21 +171,24 @@
   };
 
   var resetPage = function () {
-    mapBlock.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
+    var mapCards = document.querySelectorAll('.map__card');
 
-    fieldsetList.forEach(function (element) {
-      element.disabled = true;
-    });
+    mapBlock.classList.add('map--faded');
+
+    window.keksForm.handlePageReset();
 
     mapBlock.classList.remove('map--active');
 
-    mapFilterList.forEach(function (element) {
-      element.disabled = true;
+    mapCards.forEach(function (element) {
+      if (!element.classList.contains('hidden')) {
+        element.classList.add('hidden');
+      }
     });
   };
 
-  var handleSuccesMessage = function () {
+  window.resetPage = resetPage;
+
+  var showSuccesMessage = function () {
     var cloneSuccessPopupTemplate = successPopupTemplate.content.cloneNode(true);
     var succesPopup = cloneSuccessPopupTemplate.querySelector('.success');
 
@@ -262,7 +267,7 @@
       var onFormSave = function () {
         resetPage();
         resetForm();
-        handleSuccesMessage();
+        showSuccesMessage();
         addressSeletor.resetToStartPosition();
       };
 
@@ -273,15 +278,7 @@
         window.backend.save(onFormSave, showSubmitFormError, formData);
       };
 
-      adForm.classList.add('ad-form--disabled');
-
-      fieldsetList.forEach(function (element) {
-        element.disabled = true;
-      });
-
-      mapFilterList.forEach(function (element) {
-        element.disabled = true;
-      });
+      window.keksForm.handlePageReset();
 
       mapFilterList.forEach(function (element) {
         element.disabled = false;
@@ -293,7 +290,7 @@
         addressSeletor.reset();
       });
     },
-    handlePageActivate: function () {
+    onPageActivate: function () {
       adForm.classList.remove('ad-form--disabled');
 
       fieldsetList.forEach(function (element) {

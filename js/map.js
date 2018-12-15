@@ -164,7 +164,7 @@
     mapBlock.classList.remove('map--faded');
     mapBlock.classList.add('map--active');
 
-    window.keksForm.handlePageActivate();
+    window.keksForm.onPageActivate();
   };
 
   var resetPage = function () {
