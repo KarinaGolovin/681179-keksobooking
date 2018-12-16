@@ -236,11 +236,11 @@
     };
 
     var filters = window.keksMapFilters({
-      onFiltersChange: function () {
+      onFiltersChange: window.keksUtilities.debounce(function () {
         if (activeAds !== null) {
           renderAds(activeAds);
         }
-      }
+      }, 500)
     });
 
     return {
