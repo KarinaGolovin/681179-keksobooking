@@ -1,30 +1,30 @@
 'use strict';
 
-var MAP_HEIGHT = 630;
-var MIN_ACTIVE_MAP_X = 0;
-var MIN_ACTIVE_MAP_Y = 130;
-var MAIN_PIN_WIDTH = 64;
-var MAIN_PIN_HEIGHT = 86;
-var MAIN_PIN_MARGIN = MAIN_PIN_WIDTH * 0.3;
-var KEY_CODES = window.constants.KEY_CODES;
-var MAIN_PIN_X_START = 570;
-var MAIN_PIN_Y_START = 375;
+(function () {
+  var MAP_HEIGHT = 630;
+  var MIN_ACTIVE_MAP_X = 0;
+  var MIN_ACTIVE_MAP_Y = 130;
+  var MAIN_PIN_WIDTH = 64;
+  var MAIN_PIN_HEIGHT = 86;
+  var MAIN_PIN_MARGIN = MAIN_PIN_WIDTH * 0.3;
+  var KEY_CODES = window.constants.KEY_CODES;
+  var MAIN_PIN_X_START = 570;
+  var MAIN_PIN_Y_START = 375;
 
-window.mapAddressSelector = (function () {
-  var limitValue = window.usefulUtilities.limitValue;
+  window.keksMapAddressSelector = function (config) {
+    var limitValue = window.keksUtilities.limitValue;
 
-  var elementInitialPositionX = null;
-  var elementInitialPositionY = null;
+    var elementInitialPositionX = null;
+    var elementInitialPositionY = null;
 
-  var locationX = null;
-  var locationY = null;
+    var locationX = MAIN_PIN_X_START;
+    var locationY = MAIN_PIN_Y_START;
 
-  var updateLocation = function (pinX, pinY) {
-    locationX = pinX;
-    locationY = pinY;
-  };
+    var updateLocation = function (pinX, pinY) {
+      locationX = pinX;
+      locationY = pinY;
+    };
 
-  var init = function (config) {
     var onActivate = config.onActivate;
     var onLocationChange = config.onLocationChange;
     var containerWidth = config.containerWidth;
@@ -85,9 +85,5 @@ window.mapAddressSelector = (function () {
         onLocationChange(MAIN_PIN_X_START, MAIN_PIN_Y_START);
       }
     };
-  };
-
-  return {
-    init: init
-  };
+  }
 })();

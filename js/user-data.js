@@ -20,10 +20,10 @@ window.userData = (function () {
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
 
-  var getRandomNumber = window.usefulUtilities.getRandomNumber;
-  var shuffleArray = window.usefulUtilities.shuffleArray;
-  var getRandomArrayValue = window.usefulUtilities.getRandomArrayValue;
-  var generateSequence = window.usefulUtilities.generateSequence;
+  var getRandomNumber = window.keksUtilities.getRandomNumber;
+  var shuffleArray = window.keksUtilities.shuffleArray;
+  var getRandomArrayValue = window.keksUtilities.getRandomArrayValue;
+  var generateSequence = window.keksUtilities.generateSequence;
 
   // create random array with random length
   var getRandomSlice = function (arr) {
