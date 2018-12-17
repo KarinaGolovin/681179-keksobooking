@@ -79,8 +79,10 @@
     };
 
     // Price check
+    var defaultPricePlaceholder = 'Цена за ночь...';
+    var defaultMinPrice = 0;
+
     var mapTypeToPrice = {
-      '': 'Цена за ночь...',
       'palace': 10000,
       'flat': 1000,
       'house': 5000,
@@ -88,9 +90,14 @@
     };
 
     typeSelect.addEventListener('change', function (event) {
-      var minPrice = mapTypeToPrice[event.target.value];
-      priceInput.setAttribute('placeholder', minPrice);
-      priceInput.setAttribute('min', minPrice);
+      if (!event.target.value) {
+        priceInput.setAttribute('placeholder', defaultPricePlaceholder);
+        priceInput.setAttribute('min', defaultMinPrice);
+      } else {
+        var minPrice = mapTypeToPrice[event.target.value];
+        priceInput.setAttribute('placeholder', minPrice);
+        priceInput.setAttribute('min', minPrice);
+      }
     });
 
     checkinInput.addEventListener('change', function (event) {
@@ -135,90 +142,60 @@
     var handleFileSelect = function (event) {
       var fileList = event.target.files;
       var file = fileList[0];
+      renderAvatarPreview(file);
+    };
+
+    var renderAvatarPreview = function (file) {
       previewImg.src = URL.createObjectURL(file);
     };
 
     avatarInput.addEventListener('change', handleFileSelect, false);
 
-    // drag and drop avatar and fotos
+    // Drag and drop avatar and fotos
     var declineDefaultAndPropagation = function (ev) {
       ev.preventDefault();
       ev.stopPropagation();
     };
 
     var highlight = function (ev) {
-      ev.target.classList.add('highlight');
+      ev.currentTarget.classList.add('highlight');
     };
 
     var unhighlight = function (ev) {
-      ev.target.classList.remove('highlight');
-    };
-
-    var previewFile = function (file) {
-      var reader = new FileReader();
-
-      reader.readAsDataURL(file);
-      reader.onloadend = function () {
-        previewImg.src = URL.createObjectURL(file);
-      }
-    };
-
-    var previewFiles = function (file) {
-      var reader = new FileReader();
-
-      reader.readAsDataURL(file);
-
-      reader.onloadend = function () {
-          var imageContainer = document.createElement('div');
-          var image = URL.createObjectURL(file);
-          var imageElement = document.createElement('img');
-
-          imageContainer.classList.add('ad-form__photo');
-          imageElement.classList.add('ad-form__photo--element');
-          imageElement.src = image;
-          imageContainer.appendChild(imageElement);
-          photoFormInsert.appendChild(imageContainer);
-      };
-    };
-
-    var handleAvatar = function (files) {
-      var files = [...files];
-      var file = files[0];
-
-      previewFile(file);
-    };
-
-    var handlePhoto = function (files) {
-      var files = [...files];
-
-      files.forEach(previewFiles);
+      ev.currentTarget.classList.remove('highlight');
     };
 
     var handleDrop = function (ev) {
-      var data = ev.dataTransfer;
-      var files = data.files;
+      var fileInput = ev.target.parentElement.querySelector('input[type="file"]');
 
-      if(ev.target === avatarDropField) {
-        handleAvatar(files);
-      } else if (ev.target === photosDropField) {
-        handlePhoto(files);
+      if (adForm.classList.contains('ad-form--disabled')) {
+        return;
       }
 
+      if (fileInput) {
+        fileInput.files = ev.dataTransfer.files;
+
+        if (ev.currentTarget === avatarDropField) {
+          renderAvatarPreview(fileInput.files[0]);
+        } else {
+          renderPhotosPreview(fileInput.files);
+        }
+      }
     };
 
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (eventName) {
       avatarDropField.addEventListener(eventName, declineDefaultAndPropagation, false);
       photosDropField.addEventListener(eventName, declineDefaultAndPropagation, false);
     });
 
     // highlight on hover
-    ['dragenter', 'dragover'].forEach(eventName => {
+    ['dragenter', 'dragover'].forEach(function (eventName) {
       avatarDropField.addEventListener(eventName, highlight, false);
       photosDropField.addEventListener(eventName, highlight, false);
     });
 
     // unhighlight area
-    ['dragleave', 'drop'].forEach(eventName => {
+    ['dragleave', 'drop'].forEach(function (eventName) {
       avatarDropField.addEventListener(eventName, unhighlight, false);
       photosDropField.addEventListener(eventName, unhighlight, false);
     });
@@ -228,19 +205,25 @@
 
     // Show uploaded fotos
     var handleFilesUpload = function (event) {
-      var fileList = event.target.files;
+      renderPhotosPreview(event.target.files);
+    };
 
-      for (var i = 0; i < fileList.length; i++) {
+    var renderPhotosPreview = function (fileList) {
+      photoFormInsert.querySelectorAll('.ad-form__photo').forEach(function (preview) {
+        photoFormInsert.removeChild(preview);
+      });
+
+      Array.from(fileList).forEach(function (file) {
         var imageContainer = document.createElement('div');
-        var image = URL.createObjectURL(fileList[i]);
         var imageElement = document.createElement('img');
+        var image = URL.createObjectURL(file);
 
         imageContainer.classList.add('ad-form__photo');
         imageElement.classList.add('ad-form__photo--element');
         imageElement.src = image;
         imageContainer.appendChild(imageElement);
         photoFormInsert.appendChild(imageContainer);
-      }
+      });
     };
 
     uploadInput.addEventListener('change', handleFilesUpload, false);
@@ -253,6 +236,8 @@
       });
 
       previewImg.src = DEFAULT_AVATAR;
+
+      priceInput.setAttribute('placeholder', defaultPricePlaceholder);
 
       var photoFormElements = photoFormInsert.querySelectorAll('.ad-form__photo');
       photoFormElements.forEach(function (element) {
@@ -341,7 +326,6 @@
     };
 
     var handleFormSave = function () {
-      resetForm();
       showSuccessMessage();
       if (typeof config.onFormSave === 'function') {
         config.onFormSave();
@@ -356,9 +340,8 @@
     };
 
     adForm.addEventListener('submit', submitAdForm);
-    adForm.addEventListener('reset', function (event) {
-      resetForm(event);
-
+    adForm.addEventListener('reset', function () {
+      resetForm();
       if (typeof config.onFormReset === 'function') {
         config.onFormReset();
       }
@@ -367,7 +350,8 @@
     return {
       setAddress: setAddress,
       activateForm: activateForm,
-      disableForm: disableForm
+      disableForm: disableForm,
+      resetForm: resetForm
     };
   };
 })();

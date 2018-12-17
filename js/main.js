@@ -17,6 +17,7 @@
     onFormSave: function () {
       map.addressSelector.resetToStartPosition();
       map.resetPage();
+      form.resetForm();
       form.disableForm();
     },
     onFormReset: function () {
@@ -26,4 +27,5 @@
 
   var initialPinLocation = map.addressSelector.getLocation();
   form.setAddress(initialPinLocation.x, initialPinLocation.y);
+  form.disableForm();
 })();

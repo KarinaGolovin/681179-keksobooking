@@ -166,7 +166,7 @@
       window.backend.load(onLoadFunction, onErrorFunction);
     };
 
-    // First opening of the page, reaction on main pin move
+    // First opening of the page
     var activatePage = function () {
       if (mapBlock.classList.contains('map--active')) {
         return;
