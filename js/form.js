@@ -128,14 +128,103 @@
     });
 
     // Show avatar preview
+    var avatarInput = document.querySelector('#avatar');
+    var avatarDropField = document.querySelector('.ad-form-header__drop-zone');
+    var photosDropField = document.querySelector('.ad-form__drop-zone');
+
     var handleFileSelect = function (event) {
       var fileList = event.target.files;
       var file = fileList[0];
       previewImg.src = URL.createObjectURL(file);
     };
 
-    var avatarInput = document.querySelector('#avatar');
     avatarInput.addEventListener('change', handleFileSelect, false);
+
+    // drag and drop avatar and fotos
+    var declineDefaultAndPropagation = function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    };
+
+    var highlight = function (ev) {
+      ev.target.classList.add('highlight');
+    };
+
+    var unhighlight = function (ev) {
+      ev.target.classList.remove('highlight');
+    };
+
+    var previewFile = function (file) {
+      var reader = new FileReader();
+
+      reader.readAsDataURL(file);
+      reader.onloadend = function () {
+        previewImg.src = URL.createObjectURL(file);
+      }
+    };
+
+    var previewFiles = function (file) {
+      var reader = new FileReader();
+
+      reader.readAsDataURL(file);
+
+      reader.onloadend = function () {
+          var imageContainer = document.createElement('div');
+          var image = URL.createObjectURL(file);
+          var imageElement = document.createElement('img');
+
+          imageContainer.classList.add('ad-form__photo');
+          imageElement.classList.add('ad-form__photo--element');
+          imageElement.src = image;
+          imageContainer.appendChild(imageElement);
+          photoFormInsert.appendChild(imageContainer);
+      };
+    };
+
+    var handleAvatar = function (files) {
+      var files = [...files];
+      var file = files[0];
+
+      previewFile(file);
+    };
+
+    var handlePhoto = function (files) {
+      var files = [...files];
+
+      files.forEach(previewFiles);
+    };
+
+    var handleDrop = function (ev) {
+      var data = ev.dataTransfer;
+      var files = data.files;
+
+      if(ev.target === avatarDropField) {
+        handleAvatar(files);
+      } else if (ev.target === photosDropField) {
+        handlePhoto(files);
+      }
+
+    };
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      avatarDropField.addEventListener(eventName, declineDefaultAndPropagation, false);
+      photosDropField.addEventListener(eventName, declineDefaultAndPropagation, false);
+    });
+
+    // highlight on hover
+    ['dragenter', 'dragover'].forEach(eventName => {
+      avatarDropField.addEventListener(eventName, highlight, false);
+      photosDropField.addEventListener(eventName, highlight, false);
+    });
+
+    // unhighlight area
+    ['dragleave', 'drop'].forEach(eventName => {
+      avatarDropField.addEventListener(eventName, unhighlight, false);
+      photosDropField.addEventListener(eventName, unhighlight, false);
+    });
+
+    avatarDropField.addEventListener('drop', handleDrop, false);
+    photosDropField.addEventListener('drop', handleDrop, false);
 
     // Show uploaded fotos
     var handleFilesUpload = function (event) {
