@@ -1,11 +1,15 @@
 'use strict';
 
 (function () {
-  var KEY_CODES = window.constants.KEY_CODES;
+  var KEY_CODES = window.keks.constants.KEY_CODES;
+  var defaultFunctionParam = window.keks.utilities.defaultFunctionParam;
 
-  window.keksMapPopup = function (config) {
-    var onClose = config.onClose;
-    var onOpen = config.onOpen;
+  window.keks = window.keks || {};
+  window.keks.map = window.keks.map || {};
+
+  window.keks.map.popup = function (config) {
+    var onClose = defaultFunctionParam(config.onClose);
+    var onOpen = defaultFunctionParam(config.onOpen);
     var activePopupId = null;
 
     var togglePopupById = function (popupId, isHidden) {
@@ -24,9 +28,7 @@
         togglePopupById(popupId, false);
       }
 
-      if (typeof onOpen === 'function') {
-        onOpen(popupId);
-      }
+      onOpen(popupId);
 
       activePopupId = popupId;
     };
@@ -39,9 +41,7 @@
       togglePopupById(activePopupId, true);
       activePopupId = null;
 
-      if (typeof onClose === 'function') {
-        onClose();
-      }
+      onClose();
     };
 
     // Add on click functional, listen [X] button event

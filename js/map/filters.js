@@ -4,8 +4,14 @@
   var PRICE_LOW = 10000;
   var PRICE_HIGH = 50000;
 
-  window.keksMapFilters = function (config) {
+  window.keks = window.keks || {};
+  window.keks.map = window.keks.map || {};
+
+  window.keks.map.filters = function (config) {
     var filtersContainer = document.querySelector('.map__filters');
+    var mapFilterList = filtersContainer.querySelectorAll('.map__filter');
+    var defaultFunctionParam = window.keks.utilities.defaultFunctionParam;
+    var onFiltersChange = defaultFunctionParam(config.onFiltersChange);
 
     var filtersState = {};
 
@@ -36,7 +42,7 @@
       }
     };
 
-    var onFiltersChange = function (event) {
+    var handleFiltersChange = function (event) {
       var name = event.target.name.replace('housing-', '');
       var value = event.target.value;
 
@@ -59,12 +65,10 @@
         }
       }
 
-      if (typeof config.onFiltersChange === 'function') {
-        config.onFiltersChange();
-      }
+      onFiltersChange();
     };
 
-    filtersContainer.addEventListener('change', onFiltersChange);
+    filtersContainer.addEventListener('change', handleFiltersChange);
 
     var applyFilters = function (list) {
       var updatedList = list.slice();
@@ -97,8 +101,22 @@
       return updatedList;
     };
 
+    var enableFilters = function () {
+      mapFilterList.forEach(function (element) {
+        element.disabled = false;
+      });
+    };
+
+    var disableFilters = function () {
+      mapFilterList.forEach(function (element) {
+        element.disabled = true;
+      });
+    };
+
     return {
-      applyFilters: applyFilters
+      applyFilters: applyFilters,
+      enableFilters: enableFilters,
+      disableFilters: disableFilters
     };
   };
 })();

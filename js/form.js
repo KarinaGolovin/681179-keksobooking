@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
-  window.keksForm = function (config) {
-    var KEY_CODES = window.constants.KEY_CODES;
+  window.keks = window.keks || {};
+
+  window.keks.form = function (config) {
+    var KEY_CODES = window.keks.constants.KEY_CODES;
     var DEFAULT_AVATAR = 'img/muffin-grey.svg';
 
     var fieldsetList = document.querySelectorAll('fieldset');
@@ -21,11 +23,15 @@
     var checkinInput = document.querySelector('#timein');
     var uploadInput = document.querySelector('.ad-form__upload');
 
-    var showVisualFeedback = window.keksUtilities.showVisualFeedback;
+    var showVisualFeedback = window.keks.utilities.showVisualFeedback;
+    var defaultFunctionParam = window.keks.utilities.defaultFunctionParam;
 
     // Room capacity Validity check
     var roomCount = document.querySelector('#room_number');
     var questCapacity = document.querySelector('#capacity');
+
+    var onFormSave = defaultFunctionParam(config.onFormSave);
+    var onFormReset = defaultFunctionParam(config.onFormReset);
 
     var roomDependencies = {
       '1': ['1'],
@@ -327,24 +333,20 @@
 
     var handleFormSave = function () {
       showSuccessMessage();
-      if (typeof config.onFormSave === 'function') {
-        config.onFormSave();
-      }
+      onFormSave();
     };
 
     var submitAdForm = function () {
       event.preventDefault();
       var formData = new FormData(event.currentTarget);
 
-      window.backend.save(handleFormSave, showSubmitFormError, formData);
+      window.keks.backend.save(handleFormSave, showSubmitFormError, formData);
     };
 
     adForm.addEventListener('submit', submitAdForm);
     adForm.addEventListener('reset', function () {
       resetForm();
-      if (typeof config.onFormReset === 'function') {
-        config.onFormReset();
-      }
+      onFormReset();
     });
 
     return {
