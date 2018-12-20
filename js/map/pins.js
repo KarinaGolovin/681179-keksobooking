@@ -1,14 +1,17 @@
 'use strict';
 
 (function () {
-  window.keksMapPins = function () {
+  window.keks = window.keks || {};
+  window.keks.map = window.keks.map || {};
+
+  window.keks.map.pins = function () {
     var PIN_CLASS = 'map__pin';
     var PIN_ACTIVE_CLASS = 'map__pin--active';
     var PIN_MAIN_CLASS = 'map__pin--main';
-    var KEY_CODES = window.constants.KEY_CODES;
+    var KEY_CODES = window.keks.constants.KEY_CODES;
 
     var focusedPin = null;
-    var popupInstance = window.keksMapPopup({
+    var popupInstance = window.keks.map.popup({
       onClose: function () {
         resetActivePin();
       }

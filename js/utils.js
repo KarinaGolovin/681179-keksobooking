@@ -1,7 +1,9 @@
 'use strict';
 
 (function () {
-  window.keksUtilities = {
+  window.keks = window.keks || {};
+
+  window.keks.utilities = {
     getRandomNumber: function (minNumber, maxNumber) {
       return Math.floor(minNumber + (Math.random() * (maxNumber + 1 - minNumber)));
     },
@@ -29,7 +31,7 @@
       return words[index];
     },
     getRandomArrayValue: function (arr) {
-      return arr[window.keksUtilities.getRandomNumber(0, arr.length - 1)];
+      return arr[window.keks.utilities.getRandomNumber(0, arr.length - 1)];
     },
     generateSequence: function (number) {
       var numbersArray = [];
@@ -72,6 +74,13 @@
           func.apply(null, args);
         }
       };
+    },
+    defaultFunctionParam: function (fn) {
+      if (typeof fn !== 'function') {
+        return function () {};
+      }
+
+      return fn;
     }
   };
 })();

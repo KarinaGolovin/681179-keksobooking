@@ -1,11 +1,16 @@
 'use strict';
 
-window.mapUtils = (function () {
-  var createDraggablePin = function (config) {
+(function () {
+  window.keks = window.keks || {};
+  window.keks.map = window.keks.map || {};
+
+  var defaultFunctionParam = window.keks.utilities.defaultFunctionParam;
+
+  var makeDraggable = function (config) {
     var element = config.element;
-    var onDragStop = config.onDragStop;
-    var onDragStart = config.onDragStart;
-    var onDragMove = config.onDragMove;
+    var onDragStop = defaultFunctionParam(config.onDragStop);
+    var onDragStart = defaultFunctionParam(config.onDragStart);
+    var onDragMove = defaultFunctionParam(config.onDragMove);
 
     // Main_pin drag-n-drop
     element.addEventListener('mousedown', function (event) {
@@ -16,9 +21,7 @@ window.mapUtils = (function () {
         y: element.offsetTop
       };
 
-      if (typeof onDragStart === 'function') {
-        onDragStart(startPosition.clientX, startPosition.clientY);
-      }
+      onDragStart(startPosition.clientX, startPosition.clientY);
 
       var movePin = function (moveEvt) {
         var deltaX = startPosition.clientX - moveEvt.clientX;
@@ -27,18 +30,14 @@ window.mapUtils = (function () {
         var pinX = startPosition.x - deltaX;
         var pinY = startPosition.y - deltaY;
 
-        if (typeof onDragMove === 'function') {
-          onDragMove(pinX, pinY);
-        }
+        onDragMove(pinX, pinY);
       };
 
       var stopPin = function () {
         var pinX = element.offsetLeft;
         var pinY = element.offsetTop;
 
-        if (typeof onDragStop === 'function') {
-          onDragStop(pinX, pinY);
-        }
+        onDragStop(pinX, pinY);
 
         document.removeEventListener('mousemove', movePin);
         document.removeEventListener('mouseup', stopPin);
@@ -49,7 +48,7 @@ window.mapUtils = (function () {
     });
   };
 
-  return {
-    createDraggablePin: createDraggablePin
+  window.keks.map.utils = {
+    makeDraggable: makeDraggable
   };
 })();

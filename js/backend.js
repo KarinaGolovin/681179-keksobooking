@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  window.keks = window.keks || {};
+
   var load = function (config) {
     var url = config.url;
     var onSuccess = config.onSuccess;
@@ -34,7 +36,7 @@
     xhr.send(data);
   };
 
-  window.backend = {
+  window.keks.backend = {
     save: function (onLoad, onError, data) {
       load({
         url: 'https://js.dump.academy/keksobooking',

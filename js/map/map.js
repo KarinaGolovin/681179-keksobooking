@@ -1,14 +1,17 @@
 'use strict';
 
 (function () {
-  window.keksMap = function (config) {
+  window.keks = window.keks || {};
+  window.keks.map = window.keks.map || {};
+
+  window.keks.map.map = function (config) {
     var OFFER_TYPES = {
       'flat': 'Квартира',
       'palace': 'Дворец',
       'house': 'Дом',
       'bungalo': 'Бунгало'
     };
-    var KEY_CODES = window.constants.KEY_CODES;
+    var KEY_CODES = window.keks.constants.KEY_CODES;
 
     var PIN_SIZE_X = 50;
     var PIN_SIZE_Y = 70;
@@ -20,9 +23,13 @@
     var mapPinTemplate = document.querySelector('#pin');
     var cardTemplate = document.querySelector('#card');
     var errorPopupTemplate = document.querySelector('#error');
-    var mapFilterList = mapBlock.querySelectorAll('.map__filter');
 
-    var getWordend = window.keksUtilities.getWordend;
+    var getWordend = window.keks.utilities.getWordend;
+    var defaultFunctionParam = window.keks.utilities.defaultFunctionParam;
+
+    var onPageActivate = defaultFunctionParam(config.onPageActivate);
+    var onPageReset = defaultFunctionParam(config.onPageReset);
+    var onLocationChange = defaultFunctionParam(config.onLocationChange);
 
     // Render apartment photos
     var renderPhotos = function (element, photosList) {
@@ -157,16 +164,14 @@
       activeAds = usersList;
       renderAds(usersList);
 
-      mapFilterList.forEach(function (element) {
-        element.disabled = false;
-      });
+      filters.enableFilters();
     };
 
     var fetchAds = function () {
-      window.backend.load(onLoadFunction, onErrorFunction);
+      window.keks.backend.load(onLoadFunction, onErrorFunction);
     };
 
-    // First opening of the page, reaction on main pin move
+    // First opening of the page
     var activatePage = function () {
       if (mapBlock.classList.contains('map--active')) {
         return;
@@ -177,9 +182,7 @@
       mapBlock.classList.remove('map--faded');
       mapBlock.classList.add('map--active');
 
-      if (typeof config.onPageActivate === 'function') {
-        config.onPageActivate();
-      }
+      onPageActivate();
     };
 
     var resetPage = function () {
@@ -194,28 +197,17 @@
         }
       });
 
-      mapFilterList.forEach(function (element) {
-        element.disabled = true;
-      });
-
-      if (typeof config.onPageReset === 'function') {
-        config.onPageReset();
-      }
+      filters.disableFilters();
+      onPageReset();
     };
 
-    var onLocationChange = function (pinX, pinY) {
-      if (typeof config.onPageActivate === 'function') {
-        config.onLocationChange(pinX, pinY);
-      }
-    };
-
-    var addressSelector = window.keksMapAddressSelector({
+    var addressSelector = window.keks.map.addressSelector({
       containerWidth: mapBlock.clientWidth,
       onActivate: activatePage,
       onLocationChange: onLocationChange
     });
 
-    var pins = window.keksMapPins();
+    var pins = window.keks.map.pins();
 
     var removeElement = function (element) {
       if (element && element.parentElement) {
@@ -235,16 +227,17 @@
       document.querySelectorAll('.map__card').forEach(removeElement);
     };
 
-    var filters = window.keksMapFilters({
-      onFiltersChange: window.keksUtilities.debounce(function () {
+    var filters = window.keks.map.filters({
+      onFiltersChange: window.keks.utilities.debounce(function () {
         if (activeAds !== null) {
           renderAds(activeAds);
         }
-      }, 500)
+      }, 500, true)
     });
 
     return {
       addressSelector: addressSelector,
+      filters: filters,
       resetPage: resetPage
     };
   };

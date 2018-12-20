@@ -578,7 +578,9 @@ fieldset {
   cursor: pointer;
 }
 
-.ad-form-header__drop-zone:hover {
+.ad-form-header__drop-zone:hover,
+.ad-form-header__drop-zone.highlight,
+.ad-form__drop-zone.highlight  {
   color: #ff5635;
 }
 

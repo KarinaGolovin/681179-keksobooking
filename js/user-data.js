@@ -20,19 +20,19 @@ window.userData = (function () {
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
 
-  var getRandomNumber = window.keksUtilities.getRandomNumber;
-  var shuffleArray = window.keksUtilities.shuffleArray;
-  var getRandomArrayValue = window.keksUtilities.getRandomArrayValue;
-  var generateSequence = window.keksUtilities.generateSequence;
+  var getRandomNumber = window.keks.utilities.getRandomNumber;
+  var shuffleArray = window.keks.utilities.shuffleArray;
+  var getRandomArrayValue = window.keks.utilities.getRandomArrayValue;
+  var generateSequence = window.keks.utilities.generateSequence;
 
-  // create random array with random length
+  // Create random array with random length
   var getRandomSlice = function (arr) {
     var randomLength = getRandomNumber(0, arr.length - 1);
 
     return shuffleArray(arr).slice(0, Math.max(randomLength, 1));
   };
 
-  // create random unrepeatable avatar
+  // Create random unrepeatable avatar
   var arrayFromNumber = null;
   var avatarIndexs = null;
   var getRandomAvatar = function () {
@@ -69,7 +69,7 @@ window.userData = (function () {
         x: getRandomNumber(config.locationXFrom, config.locationXTo),
         y: getRandomNumber(config.locationYFrom, config.locationYTo)
       },
-      // used to open/close popups
+      // Used to open/close popups
       getUserId: function () {
         return user.location.x + '_' + user.location.y;
       }
