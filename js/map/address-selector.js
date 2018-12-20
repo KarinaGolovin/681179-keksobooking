@@ -85,5 +85,5 @@
         onLocationChange(MAIN_PIN_X_START, MAIN_PIN_Y_START);
       }
     };
-  }
+  };
 })();
