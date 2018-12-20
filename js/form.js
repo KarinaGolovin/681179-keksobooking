@@ -95,31 +95,31 @@
       'bungalo': 0
     };
 
-    typeSelect.addEventListener('change', function (event) {
-      if (!event.target.value) {
+    typeSelect.addEventListener('change', function (evt) {
+      if (!evt.target.value) {
         priceInput.setAttribute('placeholder', defaultPricePlaceholder);
         priceInput.setAttribute('min', defaultMinPrice);
       } else {
-        var minPrice = mapTypeToPrice[event.target.value];
+        var minPrice = mapTypeToPrice[evt.target.value];
         priceInput.setAttribute('placeholder', minPrice);
         priceInput.setAttribute('min', minPrice);
       }
     });
 
-    checkinInput.addEventListener('change', function (event) {
-      checkoutInput.setAttribute('placeholder', event.target.value);
-      if (checkoutInput.value !== event.target.value) {
+    checkinInput.addEventListener('change', function (evt) {
+      checkoutInput.setAttribute('placeholder', evt.target.value);
+      if (checkoutInput.value !== evt.target.value) {
         showVisualFeedback(checkoutInput);
       }
-      checkoutInput.value = event.target.value;
+      checkoutInput.value = evt.target.value;
       toggleInputValididy(checkoutInput);
     });
 
-    checkoutInput.addEventListener('change', function (event) {
-      if (checkinInput.value !== event.target.value) {
+    checkoutInput.addEventListener('change', function (evt) {
+      if (checkinInput.value !== evt.target.value) {
         showVisualFeedback(checkinInput);
       }
-      checkinInput.value = event.target.value;
+      checkinInput.value = evt.target.value;
       toggleInputValididy(checkinInput);
     });
 
@@ -130,14 +130,14 @@
       input.classList.toggle('is-invalid', !isValid);
     };
 
-    adForm.addEventListener('input', function (event) {
-      if (event.target.classList.contains('is-invalid')) {
-        toggleInputValididy(event.target);
+    adForm.addEventListener('input', function (evt) {
+      if (evt.target.classList.contains('is-invalid')) {
+        toggleInputValididy(evt.target);
       }
     });
 
-    adForm.addEventListener('focusout', function (event) {
-      toggleInputValididy(event.target);
+    adForm.addEventListener('focusout', function (evt) {
+      toggleInputValididy(evt.target);
     });
 
     // Show avatar preview
@@ -145,8 +145,8 @@
     var avatarDropField = document.querySelector('.ad-form-header__drop-zone');
     var photosDropField = document.querySelector('.ad-form__drop-zone');
 
-    var handleFileSelect = function (event) {
-      var fileList = event.target.files;
+    var handleFileSelect = function (evt) {
+      var fileList = evt.target.files;
       var file = fileList[0];
       renderAvatarPreview(file);
     };
@@ -158,30 +158,30 @@
     avatarInput.addEventListener('change', handleFileSelect, false);
 
     // Drag and drop avatar and fotos
-    var declineDefaultAndPropagation = function (ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
+    var declineDefaultAndPropagation = function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
     };
 
-    var highlight = function (ev) {
-      ev.currentTarget.classList.add('highlight');
+    var highlight = function (evt) {
+      evt.currentTarget.classList.add('highlight');
     };
 
-    var unhighlight = function (ev) {
-      ev.currentTarget.classList.remove('highlight');
+    var unhighlight = function (evt) {
+      evt.currentTarget.classList.remove('highlight');
     };
 
-    var handleDrop = function (ev) {
-      var fileInput = ev.target.parentElement.querySelector('input[type="file"]');
+    var handleDrop = function (evt) {
+      var fileInput = evt.target.parentElement.querySelector('input[type="file"]');
 
       if (adForm.classList.contains('ad-form--disabled')) {
         return;
       }
 
       if (fileInput) {
-        fileInput.files = ev.dataTransfer.files;
+        fileInput.files = evt.dataTransfer.files;
 
-        if (ev.currentTarget === avatarDropField) {
+        if (evt.currentTarget === avatarDropField) {
           renderAvatarPreview(fileInput.files[0]);
         } else {
           renderPhotosPreview(fileInput.files);
@@ -208,8 +208,8 @@
     photosDropField.addEventListener('drop', handleDrop, false);
 
     // Show uploaded fotos
-    var handleFilesUpload = function (event) {
-      renderPhotosPreview(event.target.files);
+    var handleFilesUpload = function (evt) {
+      renderPhotosPreview(evt.target.files);
     };
 
     var renderPhotosPreview = function (fileList) {
@@ -234,6 +234,11 @@
 
     // Submit and reset
     var resetForm = function () {
+      adForm.reset();
+      resetFormElements();
+    };
+
+    var resetFormElements = function () {
       adForm.querySelectorAll('.is-invalid').forEach(function (element) {
         element.classList.remove('is-invalid');
       });
@@ -280,16 +285,16 @@
         main.removeChild(succesPopup);
       };
 
-      var closeMessageOnOutClick = function (event) {
-        event.preventDefault();
-        if (event.target === succesPopup) {
+      var closeMessageOnOutClick = function (evt) {
+        evt.preventDefault();
+        if (evt.target === succesPopup) {
           closeSuccessMessage();
         }
       };
 
-      var handleKeyPress = function (event) {
-        event.preventDefault();
-        if (event.keyCode === KEY_CODES.esc) {
+      var handleKeyPress = function (evt) {
+        evt.preventDefault();
+        if (evt.keyCode === KEY_CODES.esc) {
           closeSuccessMessage();
         }
       };
@@ -305,15 +310,15 @@
 
       main.appendChild(cloneErrorTemplate);
 
-      var handleKeyPressOnError = function (event) {
-        if (event.keyCode === KEY_CODES.esc) {
+      var handleKeyPressOnError = function (evt) {
+        if (evt.keyCode === KEY_CODES.esc) {
           closeErrorMessage();
         }
       };
 
-      var closeErrorMessageOnOutClick = function (event) {
-        event.preventDefault();
-        if (event.target === errorBlock) {
+      var closeErrorMessageOnOutClick = function (evt) {
+        evt.preventDefault();
+        if (evt.target === errorBlock) {
           closeErrorMessage();
         }
       };
@@ -342,7 +347,7 @@
 
     adForm.addEventListener('submit', submitAdForm);
     adForm.addEventListener('reset', function () {
-      resetForm();
+      resetFormElements();
       onFormReset();
     });
 

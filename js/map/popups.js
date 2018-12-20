@@ -49,8 +49,8 @@
       closePopup();
     };
 
-    var handleKeyDown = function (event) {
-      if (event.keyCode === KEY_CODES.esc) {
+    var handleKeyDown = function (evt) {
+      if (evt.keyCode === KEY_CODES.esc) {
         closePopup();
       }
     };

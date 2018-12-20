@@ -39,8 +39,8 @@
       element.classList.add(PIN_ACTIVE_CLASS);
     };
 
-    var handlePinClick = function (event) {
-      var clickedPin = event.currentTarget;
+    var handlePinClick = function (evt) {
+      var clickedPin = evt.currentTarget;
       var popupId = clickedPin.getAttribute('data-id');
       popupInstance.openPopupById(popupId);
       setActivePin(clickedPin);
@@ -54,8 +54,8 @@
       focusedPin = null;
     };
 
-    var handleKeyDown = function (event) {
-      if (event.keyCode === KEY_CODES.enter && focusedPin) {
+    var handleKeyDown = function (evt) {
+      if (evt.keyCode === KEY_CODES.enter && focusedPin) {
         var popupId = focusedPin.getAttribute('data-id');
         popupInstance.openPopupById(popupId);
       }

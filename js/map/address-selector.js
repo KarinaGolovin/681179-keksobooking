@@ -37,8 +37,8 @@
     elementInitialPositionX = mainPin.offsetLeft;
     elementInitialPositionY = mainPin.offsetTop;
 
-    var handleKeyPress = function (event) {
-      if (event.keyCode === KEY_CODES.enter) {
+    var handleKeyPress = function (evt) {
+      if (evt.keyCode === KEY_CODES.enter) {
         onActivate(locationX, locationY);
       }
     };
