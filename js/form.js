@@ -236,7 +236,6 @@
 
     // Submit - Reset
     var resetForm = function () {
-      adForm.reset();
       adForm.querySelectorAll('.is-invalid').forEach(function (element) {
         element.classList.remove('is-invalid');
       });
