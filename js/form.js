@@ -194,13 +194,11 @@
       photosDropField.addEventListener(eventName, declineDefaultAndPropagation, false);
     });
 
-    // highlight on hover
     ['dragenter', 'dragover'].forEach(function (eventName) {
       avatarDropField.addEventListener(eventName, highlight, false);
       photosDropField.addEventListener(eventName, highlight, false);
     });
 
-    // unhighlight area
     ['dragleave', 'drop'].forEach(function (eventName) {
       avatarDropField.addEventListener(eventName, unhighlight, false);
       photosDropField.addEventListener(eventName, unhighlight, false);
@@ -234,7 +232,7 @@
 
     uploadInput.addEventListener('change', handleFilesUpload, false);
 
-    // Submit - Reset
+    // Submit and reset
     var resetForm = function () {
       adForm.querySelectorAll('.is-invalid').forEach(function (element) {
         element.classList.remove('is-invalid');
