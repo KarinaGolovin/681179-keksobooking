@@ -12,7 +12,6 @@
       'bungalo': 'Бунгало'
     };
     var KEY_CODES = window.keks.constants.KEY_CODES;
-
     var PIN_SIZE_X = 50;
     var PIN_SIZE_Y = 70;
     var MAX_ADS = 5;
@@ -142,15 +141,15 @@
         resetPage();
       };
 
-      var handleKeyPress = function (event) {
-        if (event.keyCode === KEY_CODES.esc) {
+      var handleKeyPress = function (evt) {
+        if (evt.keyCode === KEY_CODES.esc) {
           closeErrorMessage();
         }
       };
 
-      var closeErrorMessageOnOutClick = function (event) {
-        event.preventDefault();
-        if (!event.target.classList.contains('error__message')) {
+      var closeErrorMessageOnOutClick = function (evt) {
+        evt.preventDefault();
+        if (!evt.target.classList.contains('error__message')) {
           closeErrorMessage();
         }
       };

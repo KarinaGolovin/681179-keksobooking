@@ -12,11 +12,10 @@
     var onDragStart = defaultFunctionParam(config.onDragStart);
     var onDragMove = defaultFunctionParam(config.onDragMove);
 
-    // Main_pin drag-n-drop
-    element.addEventListener('mousedown', function (event) {
+    element.addEventListener('mousedown', function (evt) {
       var startPosition = {
-        clientX: event.clientX,
-        clientY: event.clientY,
+        clientX: evt.clientX,
+        clientY: evt.clientY,
         x: element.offsetLeft,
         y: element.offsetTop
       };

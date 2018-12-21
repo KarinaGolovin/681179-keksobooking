@@ -42,11 +42,11 @@
       }
     };
 
-    var handleFiltersChange = function (event) {
-      var name = event.target.name.replace('housing-', '');
-      var value = event.target.value;
+    var handleFiltersChange = function (evt) {
+      var name = evt.target.name.replace('housing-', '');
+      var value = evt.target.value;
 
-      if (event.target.type !== 'checkbox') {
+      if (evt.target.type !== 'checkbox') {
         filtersState[name] = value;
       } else {
         if (!filtersState[name]) {
@@ -55,7 +55,7 @@
 
         var index = filtersState[name].indexOf(value);
 
-        if (event.target.checked) {
+        if (evt.target.checked) {
           filtersState[name].push(value);
         } else {
           filtersState[name] = [].concat(
