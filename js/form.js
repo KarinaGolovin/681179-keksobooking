@@ -43,8 +43,8 @@
       '100': ['0']
     };
 
-    roomCount.addEventListener('change', function (event) {
-      var value = event.target.value;
+    roomCount.addEventListener('change', function (evt) {
+      var value = evt.target.value;
       var availableOptions = roomDependencies[value];
 
       if (!value) {
@@ -346,12 +346,12 @@
       onError();
     };
 
-    var submit = function () {
-      event.preventDefault();
+    var submit = function (evt) {
+      evt.preventDefault();
 
       onSubmit();
 
-      var formData = new FormData(event.currentTarget);
+      var formData = new FormData(evt.currentTarget);
       window.keks.backend.save(onSubmitSuccess, onSubmitError, formData);
     };
 
