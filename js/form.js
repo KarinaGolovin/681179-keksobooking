@@ -20,7 +20,6 @@
     var typeSelect = document.querySelector('#type');
     var submitButton = document.querySelector('.ad-form__submit');
     var resetButton = document.querySelector('.ad-form__reset');
-    // Time check
     var checkoutInput = document.querySelector('#timeout');
     var checkinInput = document.querySelector('#timein');
     var uploadInput = document.querySelector('.ad-form__upload');
