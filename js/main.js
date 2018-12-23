@@ -5,10 +5,10 @@
 
   var map = window.keks.map.map({
     onPageActivate: function () {
-      form.activateForm();
+      form.activate();
     },
     onPageReset: function () {
-      form.disableForm();
+      form.disable();
     },
     onLocationChange: window.keks.utilities.debounce(function (x, y) {
       form.setAddress(x, y);
@@ -16,19 +16,35 @@
   });
 
   var form = window.keks.form({
-    onFormSave: function () {
-      map.addressSelector.resetToStartPosition();
-      map.resetPage();
-      form.resetForm();
-      form.disableForm();
+    onSubmit: function () {
+      form.lock();
     },
-    onFormReset: function () {
-      map.addressSelector.reset();
+    onSave: function () {
+      reset();
+    },
+    onReset: function () {
+      reset();
+    },
+    onError: function () {
+      form.unlock();
     }
   });
 
-  map.filters.disableFilters();
-  var initialPinLocation = map.addressSelector.getLocation();
-  form.setAddress(initialPinLocation.x, initialPinLocation.y);
-  form.disableForm();
+
+  var reset = function () {
+    map.addressSelector.reset();
+    map.resetPage();
+    form.reset();
+    form.disable();
+    form.unlock();
+  };
+
+  var init = function () {
+    map.filters.disableFilters();
+    var initialPinLocation = map.addressSelector.getLocation();
+    form.setAddress(initialPinLocation.x, initialPinLocation.y);
+    form.disable();
+  };
+
+  init();
 })();

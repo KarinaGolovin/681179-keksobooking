@@ -18,7 +18,8 @@
     var addressInput = document.querySelector('#address');
     var priceInput = document.querySelector('#price');
     var typeSelect = document.querySelector('#type');
-    // Time check
+    var submitButton = document.querySelector('.ad-form__submit');
+    var resetButton = document.querySelector('.ad-form__reset');
     var checkoutInput = document.querySelector('#timeout');
     var checkinInput = document.querySelector('#timein');
     var uploadInput = document.querySelector('.ad-form__upload');
@@ -30,8 +31,10 @@
     var roomCount = document.querySelector('#room_number');
     var questCapacity = document.querySelector('#capacity');
 
-    var onFormSave = defaultFunctionParam(config.onFormSave);
-    var onFormReset = defaultFunctionParam(config.onFormReset);
+    var onSave = defaultFunctionParam(config.onSave);
+    var onError = defaultFunctionParam(config.onError);
+    var onSubmit = defaultFunctionParam(config.onSubmit);
+    var onReset = defaultFunctionParam(config.onReset);
 
     var roomDependencies = {
       '1': ['1'],
@@ -40,8 +43,8 @@
       '100': ['0']
     };
 
-    roomCount.addEventListener('change', function (event) {
-      var value = event.target.value;
+    roomCount.addEventListener('change', function (evt) {
+      var value = evt.target.value;
       var availableOptions = roomDependencies[value];
 
       if (!value) {
@@ -233,12 +236,12 @@
     uploadInput.addEventListener('change', handleFilesUpload, false);
 
     // Submit and reset
-    var resetForm = function () {
+    var reset = function () {
       adForm.reset();
-      resetFormElements();
+      resetElements();
     };
 
-    var resetFormElements = function () {
+    var resetElements = function () {
       adForm.querySelectorAll('.is-invalid').forEach(function (element) {
         element.classList.remove('is-invalid');
       });
@@ -253,7 +256,7 @@
       });
     };
 
-    var disableForm = function () {
+    var disable = function () {
       adForm.classList.add('ad-form--disabled');
 
       fieldsetList.forEach(function (element) {
@@ -261,7 +264,7 @@
       });
     };
 
-    var activateForm = function () {
+    var activate = function () {
       adForm.classList.remove('ad-form--disabled');
 
       fieldsetList.forEach(function (element) {
@@ -302,7 +305,7 @@
       succesPopup.addEventListener('click', closeMessageOnOutClick);
     };
 
-    var showSubmitFormError = function () {
+    var showSubmitError = function () {
       var cloneErrorTemplate = errorPopupTemplate.content.cloneNode(true);
       var errorBlock = cloneErrorTemplate.querySelector('.error');
       var errorMessage = cloneErrorTemplate.querySelector('.error__message');
@@ -333,29 +336,48 @@
       errorBlock.addEventListener('click', closeErrorMessageOnOutClick);
     };
 
-    var handleFormSave = function () {
+    var onSubmitSuccess = function () {
       showSuccessMessage();
-      onFormSave();
+      onSave();
     };
 
-    var submitAdForm = function () {
-      event.preventDefault();
-      var formData = new FormData(event.currentTarget);
-
-      window.keks.backend.save(handleFormSave, showSubmitFormError, formData);
+    var onSubmitError = function () {
+      showSubmitError();
+      onError();
     };
 
-    adForm.addEventListener('submit', submitAdForm);
+    var submit = function (evt) {
+      evt.preventDefault();
+
+      onSubmit();
+
+      var formData = new FormData(evt.currentTarget);
+      window.keks.backend.save(onSubmitSuccess, onSubmitError, formData);
+    };
+
+    var lock = function () {
+      submitButton.disabled = true;
+      resetButton.disabled = true;
+    };
+
+    var unlock = function () {
+      submitButton.disabled = false;
+      resetButton.disabled = false;
+    };
+
+    adForm.addEventListener('submit', submit);
     adForm.addEventListener('reset', function () {
-      resetFormElements();
-      onFormReset();
+      resetElements();
+      onReset();
     });
 
     return {
       setAddress: setAddress,
-      activateForm: activateForm,
-      disableForm: disableForm,
-      resetForm: resetForm
+      activate: activate,
+      disable: disable,
+      reset: reset,
+      lock: lock,
+      unlock: unlock
     };
   };
 })();

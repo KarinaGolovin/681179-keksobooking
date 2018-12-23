@@ -3,6 +3,8 @@
 (function () {
   window.keks = window.keks || {};
 
+  var TIMEOUT = 10000;
+
   var load = function (config) {
     var url = config.url;
     var onSuccess = config.onSuccess;
@@ -30,7 +32,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = TIMEOUT;
 
     xhr.open(method, url);
     xhr.send(data);

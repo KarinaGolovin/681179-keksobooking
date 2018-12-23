@@ -14,6 +14,7 @@
     var KEY_CODES = window.keks.constants.KEY_CODES;
     var PIN_SIZE_X = 50;
     var PIN_SIZE_Y = 70;
+    var DEBOUNCE = 500;
     var MAX_ADS = 5;
 
     var main = document.querySelector('main');
@@ -231,7 +232,7 @@
         if (activeAds !== null) {
           renderAds(activeAds);
         }
-      }, 500, true)
+      }, DEBOUNCE, true)
     });
 
     return {

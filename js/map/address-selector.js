@@ -78,11 +78,6 @@
       reset: function () {
         mainPin.style.left = elementInitialPositionX + 'px';
         mainPin.style.top = elementInitialPositionY + 'px';
-        updateLocation(elementInitialPositionX + MAIN_PIN_WIDTH / 2, elementInitialPositionY + MAIN_PIN_HEIGHT);
-      },
-      resetToStartPosition: function () {
-        mainPin.style.left = elementInitialPositionX + 'px';
-        mainPin.style.top = elementInitialPositionY + 'px';
         updateLocation(MAIN_PIN_X_START, MAIN_PIN_Y_START);
       }
     };
